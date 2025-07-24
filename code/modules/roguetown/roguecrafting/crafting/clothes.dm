@@ -45,7 +45,7 @@
 /datum/crafting_recipe/roguetown/survival/collar
 	name = "collar"
 	category = "Clothes"
-	result = /obj/item/clothing/neck/roguetown/collar
+	result = /obj/item/clothing/neck/roguetown/collar/leather
 	reqs = list(/obj/item/natural/hide/cured = 1)
 	craftdiff = 0
 

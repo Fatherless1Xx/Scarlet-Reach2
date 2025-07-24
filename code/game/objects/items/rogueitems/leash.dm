@@ -72,12 +72,14 @@
 	desc = "A strip of treated leather with a metal clasp on the end for easy clipping onto bindings."
 	icon = 'modular/icons/obj/leashes_collars.dmi'
 	icon_state = "leatherleash"
+	item_state = "leatherleash"
 
 /obj/item/leash/chain
 	name = "chain leash"
 	desc = "A durable metal chain with a metal clasp on the end for easy clipping onto bindings."
 	icon = 'modular/icons/obj/leashes_collars.dmi'
 	icon_state = "chainleash"
+	item_state = "chainleash"
 	resistance_flags = FIRE_PROOF
 	equip_sound = 'sound/foley/equip/equip_armor_chain.ogg'
 	drop_sound = 'sound/foley/dropsound/chain_drop.ogg'
@@ -388,8 +390,8 @@
 	desc = "A sturdy leather collar."
 	icon = 'modular/icons/obj/leashes_collars.dmi'
 	mob_overlay_icon = 'modular/icons/mob/collars_leashes.dmi'
-	icon_state = "leather_collar"
-	item_state = "leather_collar"
+	icon_state = "leathercollar"
+	item_state = "leathercollar"
 	leashable = TRUE
 	resistance_flags = FIRE_PROOF
 	dropshrink = 0.5
@@ -399,8 +401,8 @@
 	desc = "A leather collar with a cowbell attached."
 	icon = 'modular/icons/obj/leashes_collars.dmi'
 	mob_overlay_icon = 'modular/icons/mob/collars_leashes.dmi'
-	icon_state = "cowbell"
-	item_state = "cowbell"
+	icon_state = "cowbellcollar"
+	item_state = "cowbellcollar"
 	leashable = TRUE
 	resistance_flags = FIRE_PROOF
 	dropshrink = 0.5
@@ -410,8 +412,8 @@
 	desc = "A leather collar with a jingling catbell attached."
 	icon = 'modular/icons/obj/leashes_collars.dmi'
 	mob_overlay_icon = 'modular/icons/mob/collars_leashes.dmi'
-	icon_state = "catbell_collar"
-	item_state = "catbell_collar"
+	icon_state = "catbellcollar"
+	item_state = "catbellcollar"
 	leashable = TRUE
 	resistance_flags = FIRE_PROOF
 	dropshrink = 0.5
