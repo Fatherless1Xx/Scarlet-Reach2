@@ -729,8 +729,7 @@
 	reqs = list(/obj/item/rope = 1)
 	tools = list(/obj/item/needle)
 	time = 8 SECONDS
-	category = "Leatherwork"
-	subcategory = CAT_NONE
+	category = "Sewing"
 	always_availible = TRUE
 
 /datum/crafting_recipe/roguetown/leather/neck/leather_leash
