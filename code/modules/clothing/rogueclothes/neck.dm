@@ -694,7 +694,7 @@
 // Crafting recipes for collars and leashes
 
 /datum/crafting_recipe/roguetown/leather/neck/leather_collar
-	name = "leather collar"
+	name = "leather collar (cured leather)"
 	result = /obj/item/clothing/neck/roguetown/collar/leather
 	reqs = list(/obj/item/natural/hide/cured = 1)
 	tools = list(/obj/item/needle)
@@ -704,7 +704,7 @@
 	always_availible = TRUE
 
 /datum/crafting_recipe/roguetown/leather/neck/catbell_collar
-	name = "catbell collar"
+	name = "catbell collar (cured leather, catbell)"
 	result = /obj/item/clothing/neck/roguetown/collar/catbell
 	reqs = list(/obj/item/natural/hide/cured = 1, /obj/item/catbell = 1)
 	tools = list(/obj/item/needle)
@@ -714,7 +714,7 @@
 	always_availible = TRUE
 
 /datum/crafting_recipe/roguetown/leather/neck/cowbell_collar
-	name = "cowbell collar"
+	name = "cowbell collar (curedleather, cowbell)"
 	result = /obj/item/clothing/neck/roguetown/collar/cowbell
 	reqs = list(/obj/item/natural/hide/cured = 1, /obj/item/catbell/cow = 1)
 	tools = list(/obj/item/needle)
@@ -725,7 +725,7 @@
 
 
 /datum/crafting_recipe/roguetown/leather/neck/leather_leash
-	name = "leather leash"
+	name = "leather leash (cured leather)"
 	result = /obj/item/leash/leather
 	reqs = list(/obj/item/natural/hide/cured = 1)
 	tools = list(/obj/item/needle)

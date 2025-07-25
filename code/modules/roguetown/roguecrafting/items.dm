@@ -93,7 +93,7 @@
 	verbage = "braids"
 
 /datum/crafting_recipe/roguetown/survival/rope_leash
-	name = "rope leash"
+	name = "rope leash (rope)"
 	result = /obj/item/leash
 	reqs = list(/obj/item/rope = 1)
 	tools = list(/obj/item/needle)
@@ -103,7 +103,7 @@
 	always_availible = TRUE
 
 /datum/crafting_recipe/roguetown/survival/chain_leash
-	name = "chain leash"
+	name = "chain leash (chain)"
 	result = /obj/item/leash/chain
 	reqs = list(/obj/item/rope/chain = 1)
 	verbage_simple = "craft"

@@ -612,7 +612,3 @@ GLOBAL_LIST_EMPTY(loadout_items)
 /datum/loadout_item/chain_leash
 	name = "Chain Leash"
 	path = /obj/item/leash/chain
-
-/datum/loadout_item/cowbell
-	name = "Cowbell"
-	path = /obj/item/catbell/cow

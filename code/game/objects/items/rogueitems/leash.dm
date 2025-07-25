@@ -423,6 +423,7 @@
 	result = /obj/item/catbell
 	reqs = list(/obj/item/ingot/iron = 1)
 	category = "Smithing"
+	req_table = TRUE
 	always_availible = TRUE
 
 /datum/crafting_recipe/roguetown/smithing/cowbell
@@ -430,4 +431,5 @@
 	result = /obj/item/catbell/cow
 	reqs = list(/obj/item/ingot/iron = 1)
 	category = "Smithing"
+	req_table = TRUE
 	always_availible = TRUE
