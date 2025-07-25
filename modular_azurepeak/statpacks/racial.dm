@@ -43,8 +43,3 @@
 	name = "Enduring"
 	desc = "Your aquatic heritage grants you exceptional endurance and constitution."
 	stat_array = list(STAT_ENDURANCE = 1, STAT_CONSTITUTION = 1) 
-
-/datum/statpack/wildcard/virtuous
-	name = "Virtuous"
-	desc = "The breadth of my being is one of many, distinguished talents. \n (Allows access to 'virtues', special traits/quirks that replace the bonus normally given by a statpack.)"
-
