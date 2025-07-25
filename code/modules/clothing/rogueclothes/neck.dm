@@ -723,15 +723,6 @@
 	subcategory = CAT_NONE
 	always_availible = TRUE
 
-/datum/crafting_recipe/roguetown/leather/neck/rope_leash
-	name = "rope leash"
-	result = /obj/item/leash
-	reqs = list(/obj/item/rope = 1)
-	tools = list(/obj/item/needle)
-	time = 8 SECONDS
-	category = "Sewing"
-	always_availible = TRUE
-
 /datum/crafting_recipe/roguetown/leather/neck/leather_leash
 	name = "leather leash"
 	result = /obj/item/leash/leather
@@ -739,14 +730,5 @@
 	tools = list(/obj/item/needle)
 	time = 10 SECONDS
 	category = "Leatherwork"
-	subcategory = CAT_NONE
-	always_availible = TRUE
-
-/datum/crafting_recipe/roguetown/leather/neck/chain_leash
-	name = "chain leash"
-	result = /obj/item/leash/chain
-	reqs = list(/obj/item/rope/chain = 1)
-	time = 12 SECONDS
-	category = "Smithing"
 	subcategory = CAT_NONE
 	always_availible = TRUE
