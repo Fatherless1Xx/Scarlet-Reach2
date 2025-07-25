@@ -2,10 +2,6 @@
 	category = CATEGORY_HUMAN
 	weight = WEIGHT_MOB
 
-/datum/keybinding/human/down(client/user)
-	if(!iscarbon(user.mob))
-		return FALSE
-
 // Left commented because quick equip can put items into slots that are not in the UI, blame Roguetown.
 /* /datum/keybinding/human/quick_equip
 	hotkey_keys = list() // Keeping it empty lets the user set their own keybind since E is used
@@ -25,9 +21,6 @@
 	description = "Put held thing in belt or take out most recent thing from belt"
 
 /datum/keybinding/human/quick_equipbelt/down(client/user)
-	. = ..()
-	if(!.)
-		return FALSE
 	var/mob/living/carbon/human/H = user.mob
 	H.smart_equipbelt()
 	return TRUE
@@ -39,9 +32,6 @@
 	description = "Put held item in the left backpack slot or take out the most recent item from the left backpack slot"
 
 /datum/keybinding/human/bag_equip_backl/down(client/user)
-	. = ..()
-	if(!.)
-		return FALSE
 	var/mob/living/carbon/human/H = user.mob
 	H.smart_equipbag(SLOT_BACK_R) // These fucking shits are reversed in the UI, so keep it like this for symmetry
 	return TRUE
@@ -53,9 +43,6 @@
 	description = "Put held item in the right backpack slot or take out the most recent item from the right backpack slot"
 
 /datum/keybinding/human/bag_equip_backr/down(client/user)
-	. = ..()
-	if(!.)
-		return FALSE
 	var/mob/living/carbon/human/H = user.mob
 	H.smart_equipbag(SLOT_BACK_L) // These fucking shits are reversed in the UI, so keep it like this for symmetry
 	return TRUE
@@ -67,9 +54,6 @@
 	description = "Put held item in the left belt slot or take out the most recent item from the left belt slot"
 
 /datum/keybinding/human/bag_equip_beltl/down(client/user)
-	. = ..()
-	if(!.)
-		return FALSE
 	var/mob/living/carbon/human/H = user.mob
 	H.smart_equipbag(SLOT_BELT_R)
 	return TRUE
@@ -81,9 +65,6 @@
 	description = "Put held item in the right belt slot or take out the most recent item from the right belt slot"
 
 /datum/keybinding/human/bag_equip_beltr/down(client/user)
-	. = ..()
-	if(!.)
-		return FALSE
 	var/mob/living/carbon/human/H = user.mob
 	H.smart_equipbag(SLOT_BELT_L)
 	return TRUE
@@ -95,9 +76,6 @@
 	description = "Focus in a direction."
 
 /datum/keybinding/human/fixeye/down(client/user)
-	. = ..()
-	if(!.)
-		return FALSE
 	var/mob/living/carbon/human/H = user.mob
 	H.toggle_eye_intent(H)
 	return TRUE

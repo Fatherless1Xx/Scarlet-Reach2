@@ -43,7 +43,7 @@
 		"Steward",
 		"Court Physician",
 		"Town Elder",
-		"Knight Captain",
+		"Captain",
 		"Archivist",
 		"Knight",
 		"Court Magician",
