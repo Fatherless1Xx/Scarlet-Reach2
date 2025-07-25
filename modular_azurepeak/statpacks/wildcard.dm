@@ -5,44 +5,45 @@
 
 /datum/statpack/racial/stout
 	name = "Stout"
-	desc = "Your stout heritage grants you exceptional constitution and endurance."
+	desc = "You're built to last'."
 	stat_array = list(STAT_CONSTITUTION = 1, STAT_ENDURANCE = 1)
 
 /datum/statpack/racial/keen
 	name = "Keen"
-	desc = "Your heritage grants you keen perception and sharp intellect."
+	desc = "You notice things others do not."
 	stat_array = list(STAT_PERCEPTION = 1, STAT_INTELLIGENCE = 1)
 
 /datum/statpack/racial/swift
 	name = "Swift"
-	desc = "Your heritage grants you exceptional speed and agility."
+	desc = "You're unusually fast."
 	stat_array = list(STAT_SPEED = 1)
 
 /datum/statpack/racial/mixed
-	name = "Mixed"
-	desc = "Your mixed heritage grants you balanced perception and constitution."
+	name = "Wary"
+	desc = "You're always on guard."
 	stat_array = list(STAT_PERCEPTION = 1, STAT_CONSTITUTION = 1)
 
 /datum/statpack/racial/mighty
 	name = "Mighty"
-	desc = "Your heritage grants you exceptional strength."
+	desc = "You're unusually strong."
 	stat_array = list(STAT_STRENGTH = 1)
 
 /datum/statpack/racial/lucky
 	name = "Lucky"
-	desc = "Your heritage grants you exceptional fortune."
+	desc = "You've always been lucky."
 	stat_array = list(STAT_FORTUNE = 1)
 
 /datum/statpack/racial/infernal
 	name = "Stubborn"
-	desc = "You possess exceptional intellect and constitution."
+	desc = "You always find a way."
 	stat_array = list(STAT_INTELLIGENCE = 1, STAT_CONSTITUTION = 1)
 
 
 /datum/statpack/racial/akula
 	name = "Enduring"
-	desc = "Your aquatic heritage grants you exceptional endurance and constitution."
+	desc = "You never give up."
 	stat_array = list(STAT_ENDURANCE = 1, STAT_CONSTITUTION = 1) 
+
 
 /datum/statpack/wildcard/virtuous
 	name = "Virtuous"
