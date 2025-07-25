@@ -747,8 +747,7 @@
 	name = "chain leash"
 	result = /obj/item/leash/chain
 	reqs = list(/obj/item/rope/chain = 1)
-	tools = list(/obj/item/needle)
 	time = 12 SECONDS
-	category = "Leatherwork"
+	category = "Smithing"
 	subcategory = CAT_NONE
 	always_availible = TRUE
