@@ -1294,6 +1294,8 @@
 	icon_state = "psydonbarbute"
 	item_state = "psydonbarbute"
 	flags_inv = HIDEEARS|HIDEFACE|HIDEHAIR|HIDESNOUT
+	smeltresult = /obj/item/ingot/silver
+	smelt_bar_num = 1
 
 /obj/item/clothing/head/roguetown/helmet/heavy/psydonbarbute/getonmobprop(tag)
 	if(tag)
@@ -1310,6 +1312,8 @@
 	item_state = "psydonarmet"
 	flags_inv = HIDEEARS|HIDEFACE|HIDEHAIR|HIDESNOUT
 	adjustable = CAN_CADJUST
+	smeltresult = /obj/item/ingot/silver
+	smelt_bar_num = 1
 
 /obj/item/clothing/head/roguetown/helmet/heavy/psydonhelm/getonmobprop(tag)
 	if(tag)
