@@ -64,7 +64,6 @@
 	invocation = "Cleansing flames, kindle!"
 	invocation_type = "shout"
 	recharge_time = 5 SECONDS
-	miracle = TRUE
 	associated_skill = /datum/skill/magic/holy
 	antimagic_allowed = TRUE
 	miracle = TRUE
