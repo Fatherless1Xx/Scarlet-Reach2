@@ -241,7 +241,7 @@
 		to_chat(user,span_info("They need to be restrained."))
 		return
 	if(H.head)
-		to_chat(user,span_info("Their head is covered."))
+		to_chat(user,span_info("Their head is covered.")
 		return
 	if(H in SStreasury.bank_accounts)
 		if(SStreasury.bank_accounts[H] > 0)
