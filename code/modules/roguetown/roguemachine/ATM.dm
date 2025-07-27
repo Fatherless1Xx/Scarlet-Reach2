@@ -105,6 +105,7 @@
 		if(istype(P, /obj/item/roguecoin))
 			var/mob/living/carbon/human/H = user
 			if(H in SStreasury.bank_accounts)
+			SStreasury.generate_money_account(P.get_real_price(), H)
 				if(!HAS_TRAIT(H, TRAIT_NOBLE))
 					var/T = round(P.get_real_price() * SStreasury.tax_value)
 					if(T != 0)
@@ -112,10 +113,6 @@
 						say("Your deposit was taxed [T] mammon.")
 						record_featured_stat(FEATURED_STATS_TAX_PAYERS, H, T)
 						GLOB.scarlet_round_stats[STATS_TAXES_COLLECTED] += T
-					SStreasury.bank_accounts[H] += P.get_real_price() - T
-				else
-					SStreasury.bank_accounts[H] += P.get_real_price()
-				SStreasury.treasury_value += P.get_real_price()
 				qdel(P)
 				playsound(src, 'sound/misc/coininsert.ogg', 100, FALSE, -1)
 				return

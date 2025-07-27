@@ -169,7 +169,6 @@ SUBSYSTEM_DEF(treasury)
 			taxed_amount = round(amt * tax_value)
 			amt -= taxed_amount
 			bank_accounts[character] += amt
-			treasury_value += taxed_amount
 	else
 		return FALSE
 
