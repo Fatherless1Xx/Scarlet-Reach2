@@ -111,6 +111,12 @@
 		if (HAS_TRAIT(src, TRAIT_OUTLANDER) && !HAS_TRAIT(user, TRAIT_OUTLANDER)) 
 			. += span_phobia("A foreigner...")
 
+		if(HAS_TRAIT(src, TRAIT_DISGRACED_NOBLE))
+			if(HAS_TRAIT(user, TRAIT_NOBLE))
+				. += span_phobia("A disgraced member of the nobility...")
+			else
+				. += span_notice("A disgraced noble.")
+
 		//For tennite schism god-event
 		if(length(GLOB.tennite_schisms))
 			var/datum/tennite_schism/S = GLOB.tennite_schisms[1]
