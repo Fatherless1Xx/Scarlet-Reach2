@@ -265,3 +265,184 @@
 		H.viewcone_override = FALSE
 		H.hide_cone()
 		H.update_cone_show()
+
+//T4 Miracle - Divine Flame Armor
+/obj/effect/proc_holder/spell/invoked/divine_flame_armor
+	name = "Flame Armor"
+	desc = "Astrata's sacred flames wrap around the target as protective armor."
+	overlay_state = "divinearmor"
+	releasedrain = 120
+	chargedrain = 0
+	chargetime = 10 SECONDS
+	chargedloop = null
+	req_items = list(/obj/item/clothing/neck/roguetown/psicross)
+	sound = 'sound/magic/bless.ogg'
+	invocation = "Astrata's light, protect us!"
+	invocation_type = "shout"
+	recharge_time = 5 MINUTES
+	associated_skill = /datum/skill/magic/holy
+	antimagic_allowed = TRUE
+	miracle = TRUE
+	devotion_cost = 150
+	range = 7
+
+/obj/effect/proc_holder/spell/invoked/divine_flame_armor/cast(list/targets, mob/user)
+	var/atom/A = targets[1]
+	if(!ishuman(A))
+		revert_cast()
+		return FALSE
+	
+	var/mob/living/carbon/human/H = A
+	
+	// Check if it's day time
+	if(GLOB.tod != "day" && GLOB.tod != "dawn")
+		to_chat(user, span_warning("Astrata's blessing only works during the day!"))
+		revert_cast()
+		return FALSE
+	
+	// Apply the divine flame armor effect
+	H.apply_status_effect(/datum/status_effect/buff/divine_flame_armor)
+	
+	if(H != user)
+		user.visible_message(span_warning("[user] surrounds [H] with divine flames that form protective armor!"), 
+							span_green("I surround [H] with Astrata's sacred flames as protective armor!"))
+		to_chat(H, span_green("[user] surrounds me with Astrata's sacred flames as protective armor!"))
+	else
+		user.visible_message(span_warning("[user] is surrounded by divine flames that form protective armor!"), 
+							span_green("Astrata's sacred flames wrap around me as protective armor!"))
+	
+	playsound(get_turf(H), 'sound/magic/bless.ogg', 100, FALSE)
+	
+	return TRUE
+
+/atom/movable/screen/alert/status_effect/buff/divine_flame_armor
+	name = "Divine Flame Armor"
+	desc = "Sacred flames protect me from harm, reducing damage taken and converting it to firestack reduction. I am immune to fire damage."
+	icon_state = "divinearmor"
+
+/datum/status_effect/buff/divine_flame_armor
+	id = "divine_flame_armor"
+	alert_type = /atom/movable/screen/alert/status_effect/buff/divine_flame_armor
+	duration = 30 SECONDS
+	var/original_fire_stacks = 0
+	var/armor_applied = FALSE
+	var/check_timer
+
+/datum/status_effect/buff/divine_flame_armor/on_apply()
+	. = ..()
+	if(!ishuman(owner))
+		return FALSE
+	
+	var/mob/living/carbon/human/H = owner
+	
+	// Store original divine fire stacks
+	original_fire_stacks = H.divine_fire_stacks
+	
+	// Apply 100 divine firestacks as armor
+	H.adjust_divine_fire_stacks(100)
+	
+	// We'll handle all damage through our signal interception instead of using temporary armor
+	armor_applied = FALSE
+	
+	// Add fire immunity traits
+	ADD_TRAIT(H, TRAIT_NOFIRE, "divine_flame_armor")
+	ADD_TRAIT(H, TRAIT_RESISTHEAT, "divine_flame_armor")
+	
+	// Add visual fire effect - make them actually appear to be on fire
+	H.add_filter("divine_flame_armor", 2, list("type" = "outline", "color" = "#ffa500", "alpha" = 150, "size" = 3))
+	
+	// Make them appear to be on fire
+	H.on_fire = TRUE
+	H.update_fire()
+	
+	// Register damage interception
+	RegisterSignal(H, COMSIG_MOB_APPLY_DAMGE, PROC_REF(intercept_damage))
+	
+	// Override damage application methods to ensure complete protection
+	H.physiology.brute_mod = 0
+	H.physiology.burn_mod = 0
+	
+	// Start checking for armor depletion
+	check_timer = addtimer(CALLBACK(src, PROC_REF(check_armor_depletion)), 1 SECONDS, TIMER_LOOP | TIMER_STOPPABLE)
+	
+	to_chat(owner, span_green("Divine flames wrap around me, providing immense protection and fire immunity!"))
+	
+	return TRUE
+
+/datum/status_effect/buff/divine_flame_armor/proc/intercept_damage(datum/source, damage, damagetype, def_zone)
+	SIGNAL_HANDLER
+
+	if(!ishuman(owner))
+		return
+
+	var/mob/living/carbon/human/H = owner
+
+	// Consume divine fire stacks for any damage that gets through
+	var/divine_firestack_reduction = damage
+
+	// Use INVOKE_ASYNC to defer consumption operations
+	INVOKE_ASYNC(src, PROC_REF(apply_damage_block), H, divine_firestack_reduction)
+
+
+
+/datum/status_effect/buff/divine_flame_armor/proc/apply_damage_block(mob/living/carbon/human/H, divine_firestack_reduction)
+	// Reduce divine firestacks more efficiently - only consume 10% of the damage as fire stacks
+	var/actual_consumption = max(1, round(divine_firestack_reduction * 0.1)) // Only consume 10% of damage, minimum 1
+	H.adjust_divine_fire_stacks(-actual_consumption)
+	H.visible_message(span_notice("The divine flames absorb the damage!"), span_notice("The divine flames absorb the damage!"))
+
+/datum/status_effect/buff/divine_flame_armor/proc/check_armor_depletion()
+	if(!ishuman(owner))
+		return
+	
+	var/mob/living/carbon/human/H = owner
+	
+	// Check if divine fire stacks are depleted
+	if(H.divine_fire_stacks <= 0)
+		H.visible_message(span_warning("The divine flames have been completely consumed!"), span_userdanger("The divine flames have been completely consumed!"))
+		qdel(src)
+		return
+
+/datum/status_effect/buff/divine_flame_armor/on_remove()
+	. = ..()
+	if(!ishuman(owner))
+		return
+	
+	var/mob/living/carbon/human/H = owner
+	
+	// Stop the check timer
+	if(check_timer)
+		deltimer(check_timer)
+	
+	// No temporary armor to remove - we handled everything through signal interception
+	
+	// Remove fire immunity traits
+	REMOVE_TRAIT(H, TRAIT_NOFIRE, "divine_flame_armor")
+	REMOVE_TRAIT(H, TRAIT_RESISTHEAT, "divine_flame_armor")
+	
+	// Restore original physiology modifiers
+	H.physiology.brute_mod = 1
+	H.physiology.burn_mod = 1
+	
+	// Restore original divine fire stacks
+	H.divine_fire_stacks = original_fire_stacks
+	
+	// Remove visual effect
+	H.remove_filter("divine_flame_armor")
+	
+	// Unregister damage interception
+	UnregisterSignal(H, COMSIG_MOB_APPLY_DAMGE)
+	
+	// Extinguish the divine fire effect
+	H.on_fire = FALSE
+	H.update_fire()
+	
+	to_chat(owner, span_warning("The divine flames extinguish, leaving me vulnerable once more."))
+	
+	// Play astratascream  when armor evaporates
+	H.playsound_local(get_turf(H), 'sound/misc/astratascream.ogg', 100, FALSE, pressure_affected = FALSE)
+	
+	// Extinguish any remaining fire
+	H.ExtinguishMob()
+
+

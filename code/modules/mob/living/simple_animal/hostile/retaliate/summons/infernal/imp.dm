@@ -68,8 +68,8 @@
 	var/turf/deathspot = get_turf(src)
 	new /obj/item/magic/infernalash(deathspot)
 	update_icon()
-	sleep(1)
-	qdel(src)
+	spawn(1)
+		qdel(src)
 
 
 /mob/living/simple_animal/hostile/retaliate/rogue/infernal/imp/taunted(mob/user)
