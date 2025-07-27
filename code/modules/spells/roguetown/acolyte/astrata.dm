@@ -295,7 +295,7 @@
 	var/mob/living/carbon/human/H = A
 	
 	// Check if it's day time
-	if(GLOB.tod != "day" && GLOB.tod != "dawn")
+	if(GLOB.tod != "day" && GLOB.tod != "dawn" && GLOB.tod != "dusk")
 		to_chat(user, span_warning("Astrata's blessing only works during the day!"))
 		revert_cast()
 		return FALSE
@@ -386,8 +386,8 @@
 
 
 /datum/status_effect/buff/divine_flame_armor/proc/apply_damage_block(mob/living/carbon/human/H, divine_firestack_reduction)
-	// Reduce divine firestacks more efficiently - only consume 10% of the damage as fire stacks
-	var/actual_consumption = max(1, round(divine_firestack_reduction * 0.1)) // Only consume 10% of damage, minimum 1
+	// Reduce divine firestacks 1:1 with damage
+	var/actual_consumption = divine_firestack_reduction
 	H.adjust_divine_fire_stacks(-actual_consumption)
 	H.visible_message(span_notice("The divine flames absorb the damage!"), span_notice("The divine flames absorb the damage!"))
 
