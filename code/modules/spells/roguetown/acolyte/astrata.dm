@@ -382,8 +382,9 @@
 
 	// Use INVOKE_ASYNC to defer consumption operations
 	INVOKE_ASYNC(src, PROC_REF(apply_damage_block), H, divine_firestack_reduction)
-
-
+	
+	// Block the damage completely
+	return TRUE
 
 /datum/status_effect/buff/divine_flame_armor/proc/apply_damage_block(mob/living/carbon/human/H, divine_firestack_reduction)
 	// Reduce divine firestacks 1:1 with damage
