@@ -13,7 +13,7 @@
 	conflicted on Golems, for their sensibilities vary wildly from one to the next. \
 	into cohabitation with races they'd deem lesser.<br> \
 	(Insomnia, No hunger, no blood.) \
-	(+1 Constitution, -2 Speed)"
+	(-1 Strength, -2 Speed)"
 
 	construct = 1
 	skin_tone_wording = "Material"
@@ -45,7 +45,7 @@
 		OFFSET_NECK_F = list(0,-1), OFFSET_MOUTH_F = list(0,-1), OFFSET_PANTS_F = list(0,0), \
 		OFFSET_SHIRT_F = list(0,0), OFFSET_ARMOR_F = list(0,0), OFFSET_UNDIES_F = list(0,-1), \
 		)
-	race_bonus = list(STAT_CONSTITUTION = 1, STAT_SPEED = -2)
+	race_bonus = list(STAT_STRENGTH = -1, STAT_SPEED = -2)
 	enflamed_icon = "widefire"
 	organs = list(
 		ORGAN_SLOT_BRAIN = /obj/item/organ/brain/golem,
