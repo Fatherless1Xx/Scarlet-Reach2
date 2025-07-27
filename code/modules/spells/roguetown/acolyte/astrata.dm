@@ -50,8 +50,7 @@
 	return FALSE
 
 /obj/effect/proc_holder/spell/invoked/ignition
-	name = "Ignition"
-	desc = "Ignite a flammable object at range."
+	name = "Ignite"
 	overlay_state = "sacredflame"
 	releasedrain = 30
 	chargedrain = 0
@@ -60,19 +59,31 @@
 	warnie = "sydwarning"
 	movement_interrupt = FALSE
 	chargedloop = null
+	req_items = list(/obj/item/clothing/neck/roguetown/psicross)
 	sound = 'sound/magic/heal.ogg'
-	invocation = null
-	invocation_type = null
-	associated_skill = /datum/skill/magic/holy
-	antimagic_allowed = TRUE
+	invocation = "Cleansing flames, kindle!"
+	invocation_type = "shout"
 	recharge_time = 5 SECONDS
 	miracle = TRUE
-	devotion_cost = 10
+	associated_skill = /datum/skill/magic/holy
+	antimagic_allowed = TRUE
+	miracle = TRUE
+	devotion_cost = 50
 
 /obj/effect/proc_holder/spell/invoked/ignition/cast(list/targets, mob/user = usr)
 	. = ..()
+	if(isliving(targets[1]))
+		var/mob/living/L = targets[1]
+		user.visible_message("<font color='yellow'>[user] points at [L]!</font>")
+		if(L.anti_magic_check(TRUE, TRUE))
+			return FALSE
+		L.adjust_fire_stacks(5)
+		L.IgniteMob()
+		addtimer(CALLBACK(L, TYPE_PROC_REF(/mob/living, ExtinguishMob)), 5 SECONDS)
+		return TRUE
+
 	// Spell interaction with ignitable objects (burn wooden things, light torches up)
-	if(isobj(targets[1]))
+	else if(isobj(targets[1]))
 		var/obj/O = targets[1]
 		if(O.fire_act())
 			user.visible_message("<font color='yellow'>[user] points at [O], igniting it with sacred flames!</font>")
