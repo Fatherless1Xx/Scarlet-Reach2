@@ -25,7 +25,7 @@
 		loc.visible_message(span_warning("The meister turns its nose up at [user]'s hand."))
 		to_chat(user, span_danger("The machine spits on your ignoble foreign blood."))
 		return
-*/ //Commented out for tax value, We want to tax the foreigners too, We need that money after all...
+*/
 	if(drilled)
 		if(HAS_TRAIT(H, TRAIT_NOBLE))
 			if(!HAS_TRAIT(H, TRAIT_COMMIE))
