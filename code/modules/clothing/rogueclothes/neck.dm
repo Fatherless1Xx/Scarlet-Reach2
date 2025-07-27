@@ -643,12 +643,13 @@
 	mob_overlay_icon = 'modular/icons/mob/collars_leashes.dmi'
 	desc = "A band of leather with a bell that protects the local zads from the local catfolk."
 	icon_state = "bell_collar"
+
 	leashable = TRUE
 
 /obj/item/clothing/neck/roguetown/collar/feldcollar
 	name = "feldcollar"
 	icon = 'icons/roguetown/clothing/neck.dmi'
-	mob_overlay_icon = 'icons/roguetown/clothing/neck.dmi'
+	mob_overlay_icon = 'icons/roguetown/clothing/onmob/neck.dmi'
 	desc = "A sturdy collar made of leather, commonly worn by field workers."
 	icon_state = "feldcollar"
 	item_state = "feldcollar"
@@ -660,7 +661,7 @@
 /obj/item/clothing/neck/roguetown/collar/surgcollar
 	name = "surgcollar"
 	icon = 'icons/roguetown/clothing/neck.dmi'
-	mob_overlay_icon = 'icons/roguetown/clothing/neck.dmi'
+	mob_overlay_icon = 'icons/roguetown/clothing/onmob/neck.dmi'
 	desc = "A specialized collar designed for medical practitioners, with reinforced padding."
 	icon_state = "surgcollar"
 	item_state = "surgcollar"
