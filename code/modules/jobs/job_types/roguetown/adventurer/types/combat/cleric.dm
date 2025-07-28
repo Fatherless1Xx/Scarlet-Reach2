@@ -12,7 +12,7 @@
 					"Paladin" = "A holy warrior. Where others of the clergy may have spent their free time studying scriptures, you have instead honed your skills with a blade.",
 					"Missionary" = "You are a devout worshipper of the divine with a strong connection to your patron god. You've spent years studying scriptures and serving your deity - now you wander into foreign lands, spreading the word of your faith.",
 					"Cantor" = "You were a bard once - but you've found a new calling. Your eyes have been opened to the divine, now you wander from city to city singing songs and telling tales of your patron's greatness.",
-					"Pyromancer" = "A devoted follower of Astrata who channels the Sun Queen's divine flame. You wield fire as a weapon of purification, burning away darkness and undead with holy fire.")
+					"Pyromancer" = "A devoted follower of Astrata who channels her divine flame. You wield fire as a weapon of purification, burning away darkness and undead with holy fire.")
 
 /datum/outfit/job/roguetown/adventurer/cleric
 	allowed_patrons = ALL_PATRONS
