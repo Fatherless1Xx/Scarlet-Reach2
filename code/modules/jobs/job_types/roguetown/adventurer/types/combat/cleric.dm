@@ -360,7 +360,7 @@
 			H.change_stat("perception", 2)
 			H.cmode_music = 'sound/music/combat_holy.ogg'
 			var/datum/devotion/C = new /datum/devotion(H, H.patron)
-			C.grant_miracles(H, cleric_tier = CLERIC_T2, passive_gain = CLERIC_REGEN_MINOR, devotion_limit = CLERIC_REQ_2)
+			C.grant_miracles(H, cleric_tier = CLERIC_T2, passive_gain = CLERIC_REGEN_MINOR, devotion_limit = CLERIC_REQ_3)
 			H.mind?.AddSpell(new /obj/effect/proc_holder/spell/invoked/projectile/fireball)
 			H.mind?.AddSpell(new /obj/effect/proc_holder/spell/invoked/projectile/spitfire)
 	switch(H.patron?.type)
