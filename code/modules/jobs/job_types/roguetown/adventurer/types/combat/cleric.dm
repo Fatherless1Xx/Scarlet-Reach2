@@ -11,7 +11,8 @@
 	classes = list("Monk" = "You are a wandering acolyte, versed in both miracles and martial arts. You forgo the heavy armor worn by paladins in favor of a more nimble approach to combat, utilizing your fists.",
 					"Paladin" = "A holy warrior. Where others of the clergy may have spent their free time studying scriptures, you have instead honed your skills with a blade.",
 					"Missionary" = "You are a devout worshipper of the divine with a strong connection to your patron god. You've spent years studying scriptures and serving your deity - now you wander into foreign lands, spreading the word of your faith.",
-					"Cantor" = "You were a bard once - but you've found a new calling. Your eyes have been opened to the divine, now you wander from city to city singing songs and telling tales of your patron's greatness.")
+					"Cantor" = "You were a bard once - but you've found a new calling. Your eyes have been opened to the divine, now you wander from city to city singing songs and telling tales of your patron's greatness.",
+					"Pyromancer" = "A devoted follower of Astrata who channels the Sun Queen's divine flame. You wield fire as a weapon of purification, burning away darkness and undead with holy fire.")
 
 /datum/outfit/job/roguetown/adventurer/cleric
 	allowed_patrons = ALL_PATRONS
@@ -26,7 +27,7 @@
 
 	// CLASS ARCHETYPES
 	H.adjust_blindness(-3)
-	var/classes = list("Monk","Paladin","Cantor","Missionary")
+	var/classes = list("Monk","Paladin","Cantor","Missionary","Pyromancer")
 	var/classchoice = input("Choose your archetypes", "Available archetypes") as anything in classes
 
 	switch(classchoice)
@@ -320,6 +321,48 @@
 					head = /obj/item/clothing/head/roguetown/roguehood
 			var/datum/devotion/C = new /datum/devotion(H, H.patron)
 			C.grant_miracles(H, cleric_tier = CLERIC_T1, passive_gain = CLERIC_REGEN_MINOR, devotion_limit = CLERIC_REQ_3)	//Minor regen, capped to T3.
+
+		if("Pyromancer")
+			H.set_blindness(0)
+			to_chat(H, span_warning("You are a devoted follower of Astrata's divine flame. You wield fire as a weapon of purification, burning away darkness and undead with holy fire."))
+			if(!istype(H.patron, /datum/patron/divine/astrata))
+				H.patron = GLOB.patronlist[/datum/patron/divine/astrata]
+				to_chat(H, span_notice("Your faith has been aligned with Astrata."))
+			backl = /obj/item/storage/backpack/rogue/satchel
+			shirt = /obj/item/clothing/suit/roguetown/shirt/undershirt/priest
+			pants = /obj/item/clothing/under/roguetown/trou/leather
+			shoes = /obj/item/clothing/shoes/roguetown/boots
+			belt = /obj/item/storage/belt/rogue/leather
+			beltr = /obj/item/flashlight/flare/torch/lantern
+			beltl = /obj/item/storage/belt/rogue/pouch/coins/poor
+			head = /obj/item/clothing/head/roguetown/menacing/bandit
+			cloak = /obj/item/clothing/suit/roguetown/shirt/robe/magered
+			backr = /obj/item/rogueweapon/woodstaff
+			backpack_contents = list(
+				/obj/item/flashlight/flare/torch = 1, 
+				/obj/item/recipe_book/survival = 1,
+				/obj/item/bomb = 2,
+			)
+			
+			// Skills and stats
+			H.adjust_skillrank(/datum/skill/combat/polearms, 2, TRUE)
+			H.adjust_skillrank(/datum/skill/magic/holy, 2, TRUE)
+			H.adjust_skillrank(/datum/skill/magic/arcane, 2, TRUE)
+			H.adjust_skillrank(/datum/skill/combat/wrestling, 1, TRUE)
+			H.adjust_skillrank(/datum/skill/combat/unarmed, 1, TRUE)
+			H.adjust_skillrank(/datum/skill/misc/swimming, 1, TRUE)
+			H.adjust_skillrank(/datum/skill/misc/climbing, 2, TRUE)
+			H.adjust_skillrank(/datum/skill/misc/athletics, 2, TRUE)
+			H.adjust_skillrank(/datum/skill/misc/reading, 4, TRUE)
+			H.adjust_skillrank(/datum/skill/misc/medicine, 2, TRUE)
+			H.change_stat("intelligence", 3)
+			H.change_stat("endurance", 2)
+			H.change_stat("perception", 2)
+			H.cmode_music = 'sound/music/combat_holy.ogg'
+			var/datum/devotion/C = new /datum/devotion(H, H.patron)
+			C.grant_miracles(H, cleric_tier = CLERIC_T2, passive_gain = CLERIC_REGEN_MINOR, devotion_limit = CLERIC_REQ_2)
+			H.mind?.AddSpell(new /obj/effect/proc_holder/spell/invoked/projectile/fireball)
+			H.mind?.AddSpell(new /obj/effect/proc_holder/spell/invoked/projectile/spitfire)
 	switch(H.patron?.type)
 		if(/datum/patron/old_god)
 			neck = /obj/item/clothing/neck/roguetown/psicross
