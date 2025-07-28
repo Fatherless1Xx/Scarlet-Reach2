@@ -626,62 +626,6 @@
 	icon_state = "psybracelet"
 	item_state = null
 
-/obj/item/clothing/neck/roguetown/collar
-	name = "collar"
-	icon = 'modular/icons/obj/leashes_collars.dmi'
-	mob_overlay_icon = 'modular/icons/mob/collars_leashes.dmi'
-	desc = "This is a debug parent item. If you are seeing it meow at the coders."
-	icon_state = "collar_rope"
-	item_state = "collar_rope"
-	resistance_flags = FIRE_PROOF
-	dropshrink = 0.5
-	leashable = TRUE
-	bellsound = FALSE
-	bell = FALSE
-
-//This right here is how you init components without copying the same bloody init repeatedly like how armorcode does it. I really don't like how this is done in the rest of the codebase. So have a proper example ~Neri
-/obj/item/clothing/neck/roguetown/collar/Initialize(mapload)
-	if(bellsound == TRUE)
-		. = ..()
-		AddComponent(/datum/component/squeak, SFX_COLLARJINGLE, 50, 100, 1) //We want squeak so wearer jingles if touched while wearing collar
-
-/obj/item/clothing/neck/roguetown/collar/leather
-	name = "leather collar"
-	desc = "A sturdy leather collar."
-	icon = 'modular/icons/obj/leashes_collars.dmi'
-	mob_overlay_icon = 'modular/icons/mob/collars_leashes.dmi'
-	icon_state = "leathercollar"
-	item_state = "leathercollar"
-	leashable = TRUE
-	resistance_flags = FIRE_PROOF
-	dropshrink = 0.5
-	bellsound = FALSE
-	bell = FALSE
-
-/obj/item/clothing/neck/roguetown/collar/cowbell
-	name = "cowbell collar"
-	desc = "A leather collar with a jingly cowbell attached."
-	icon = 'modular/icons/obj/leashes_collars.dmi'
-	mob_overlay_icon = 'modular/icons/mob/collars_leashes.dmi'
-	icon_state = "cowbellcollar"
-	item_state = "cowbellcollar"
-	leashable = TRUE
-	resistance_flags = FIRE_PROOF
-	dropshrink = 0.5
-	bellsound = TRUE
-
-/obj/item/clothing/neck/roguetown/collar/catbell
-	name = "catbell collar"
-	desc = "A leather collar with a jingling catbell attached."
-	icon = 'modular/icons/obj/leashes_collars.dmi'
-	mob_overlay_icon = 'modular/icons/mob/collars_leashes.dmi'
-	icon_state = "catbellcollar"
-	item_state = "catbellcollar"
-	leashable = TRUE
-	resistance_flags = FIRE_PROOF
-	dropshrink = 0.5
-	bellsound = TRUE
-
 /obj/item/clothing/neck/roguetown/collar/feldcollar
 	name = "feldcollar"
 	icon = 'icons/roguetown/clothing/neck.dmi'
@@ -727,5 +671,3 @@
 		user.change_stat("fortune", -1) //how much luck stat taken away when unequipped
 		goodluckactivated = FALSE
 	return
-
-

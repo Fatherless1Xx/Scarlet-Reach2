@@ -110,7 +110,7 @@
 		belt = /obj/item/storage/belt/rogue/leather/exoticsilkbelt
 	else
 		shirt = /obj/item/clothing/suit/roguetown/shirt/undershirt/lowcut
-		neck = /obj/item/clothing/neck/roguetown/collar/catbell
+		neck = /obj/item/clothing/neck/roguetown/collar/cowbell
 		pants = /obj/item/clothing/under/roguetown/trou/leathertights
 		belt = /obj/item/storage/belt/rogue/leather/black
 		shoes = /obj/item/clothing/shoes/roguetown/sandals
