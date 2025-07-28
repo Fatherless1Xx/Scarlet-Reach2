@@ -630,21 +630,57 @@
 	name = "collar"
 	icon = 'modular/icons/obj/leashes_collars.dmi'
 	mob_overlay_icon = 'modular/icons/mob/collars_leashes.dmi'
-	desc = "A band of leather which signifies bondage to another."
-	icon_state = "collar"
-	item_state = "collar"
+	desc = "This is a debug parent item. If you are seeing it meow at the coders."
+	icon_state = "collar_rope"
+	item_state = "collar_rope"
 	resistance_flags = FIRE_PROOF
 	dropshrink = 0.5
 	leashable = TRUE
+	bellsound = FALSE
+	bell = FALSE
 
-/obj/item/clothing/neck/roguetown/collar/bell_collar
-	name = "bell collar"
+//This right here is how you init components without copying the same bloody init repeatedly like how armorcode does it. I really don't like how this is done in the rest of the codebase. So have a proper example ~Neri
+/obj/item/clothing/neck/roguetown/collar/Initialize(mapload)
+	if(bellsound == TRUE)
+		. = ..()
+		AddComponent(/datum/component/squeak, SFX_COLLARJINGLE, 50, 100, 1) //We want squeak so wearer jingles if touched while wearing collar
+
+/obj/item/clothing/neck/roguetown/collar/leather
+	name = "leather collar"
+	desc = "A sturdy leather collar."
 	icon = 'modular/icons/obj/leashes_collars.dmi'
 	mob_overlay_icon = 'modular/icons/mob/collars_leashes.dmi'
-	desc = "A band of leather with a bell that protects the local zads from the local catfolk."
-	icon_state = "bell_collar"
-
+	icon_state = "leathercollar"
+	item_state = "leathercollar"
 	leashable = TRUE
+	resistance_flags = FIRE_PROOF
+	dropshrink = 0.5
+	bellsound = FALSE
+	bell = FALSE
+
+/obj/item/clothing/neck/roguetown/collar/cowbell
+	name = "cowbell collar"
+	desc = "A leather collar with a jingly cowbell attached."
+	icon = 'modular/icons/obj/leashes_collars.dmi'
+	mob_overlay_icon = 'modular/icons/mob/collars_leashes.dmi'
+	icon_state = "cowbellcollar"
+	item_state = "cowbellcollar"
+	leashable = TRUE
+	resistance_flags = FIRE_PROOF
+	dropshrink = 0.5
+	bellsound = TRUE
+
+/obj/item/clothing/neck/roguetown/collar/catbell
+	name = "catbell collar"
+	desc = "A leather collar with a jingling catbell attached."
+	icon = 'modular/icons/obj/leashes_collars.dmi'
+	mob_overlay_icon = 'modular/icons/mob/collars_leashes.dmi'
+	icon_state = "catbellcollar"
+	item_state = "catbellcollar"
+	leashable = TRUE
+	resistance_flags = FIRE_PROOF
+	dropshrink = 0.5
+	bellsound = TRUE
 
 /obj/item/clothing/neck/roguetown/collar/feldcollar
 	name = "feldcollar"
@@ -692,45 +728,4 @@
 		goodluckactivated = FALSE
 	return
 
-// Crafting recipes for collars and leashes
 
-/datum/crafting_recipe/roguetown/leather/neck/leather_collar
-	name = "leather collar (1 cured leather)"
-	result = /obj/item/clothing/neck/roguetown/collar/leather
-	reqs = list(/obj/item/natural/hide/cured = 1)
-	tools = list(/obj/item/needle)
-	time = 8 SECONDS
-	category = "Leatherwork"
-	subcategory = CAT_NONE
-	always_availible = TRUE
-
-/datum/crafting_recipe/roguetown/leather/neck/catbell_collar
-	name = "catbell collar (1 cured leather, catbell)"
-	result = /obj/item/clothing/neck/roguetown/collar/catbell
-	reqs = list(/obj/item/natural/hide/cured = 1, /obj/item/catbell = 1)
-	tools = list(/obj/item/needle)
-	time = 10 SECONDS
-	category = "Leatherwork"
-	subcategory = CAT_NONE
-	always_availible = TRUE
-
-/datum/crafting_recipe/roguetown/leather/neck/cowbell_collar
-	name = "cowbell collar (1 curedleather, cowbell)"
-	result = /obj/item/clothing/neck/roguetown/collar/cowbell
-	reqs = list(/obj/item/natural/hide/cured = 1, /obj/item/catbell/cow = 1)
-	tools = list(/obj/item/needle)
-	time = 10 SECONDS
-	category = "Leatherwork"
-	subcategory = CAT_NONE
-	always_availible = TRUE
-
-
-/datum/crafting_recipe/roguetown/leather/neck/leather_leash
-	name = "leather leash (1 leather)"
-	result = /obj/item/leash/leather
-	reqs = list(/obj/item/natural/hide/cured = 1)
-	tools = list(/obj/item/needle)
-	time = 10 SECONDS
-	category = "Leatherwork"
-	subcategory = CAT_NONE
-	always_availible = TRUE

@@ -244,6 +244,8 @@ GLOBAL_VAR_INIT(rpg_loot_items, FALSE)
 	var/icon_angle_wielded = 0
 
 	var/leashable = FALSE // More elegant solution to leash checks
+	var/bellsound = FALSE //Sanitycheck for bell jingles
+	var/bell = FALSE //Does item have bell in it, used for attachables
 
 /obj/item/Initialize()
 	. = ..()
