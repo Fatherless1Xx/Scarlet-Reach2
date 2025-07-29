@@ -80,7 +80,7 @@
 	ADD_TRAIT(H, TRAIT_PURITAN, JOB_TRAIT)
 	// Weapon choice system
 	H.adjust_blindness(-3)
-	var/weapons = list("Crossbow & Bolts", "Recurve Bow & Bodkin Arrows")
+	var/weapons = list("Crossbow & Bolts", "Recurve Bow & Arrows")
 	var/weapon_choice = input("Choose your ranged weapon.", "TAKE UP ARMS") as anything in weapons
 	switch(weapon_choice)
 		if("Crossbow & Bolts")
