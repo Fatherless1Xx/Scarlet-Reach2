@@ -220,9 +220,9 @@
 			nodmg = TRUE
 			next_attack_msg += span_warning("Armor stops the damage.")
 
-	var/datum/wound/caused_wound
-	if(!nodmg)
-		caused_wound = affecting.bodypart_attacked_by(BCLASS_BITE, dam2do, user, user.zone_selected, crit_message = TRUE)
+	// var/datum/wound/caused_wound // DISABLED - No longer used since werewolf infection is disabled
+	// if(!nodmg) // DISABLED - No longer needed since caused_wound is disabled
+		// caused_wound = affecting.bodypart_attacked_by(BCLASS_BITE, dam2do, user, user.zone_selected, crit_message = TRUE) // DISABLED - No longer needed
 	visible_message(span_danger("[user] bites [src]'s [parse_zone(user.zone_selected)]![next_attack_msg.Join()]"), \
 					span_userdanger("[user] bites my [parse_zone(user.zone_selected)]![next_attack_msg.Join()]"))
 
@@ -237,13 +237,13 @@
 		if(ishuman(src) && user.mind)
 			var/mob/living/carbon/human/bite_victim = src
 			/*
-				WEREWOLF INFECTION VIA BITE
+				WEREWOLF INFECTION VIA BITE - DISABLED
 			*/
 			if(istype(user.dna.species, /datum/species/werewolf))
 				if(HAS_TRAIT(src, TRAIT_SILVER_BLESSED))
 					to_chat(user, span_warning("BLEH! [bite_victim] tastes of SILVER! My gift cannot take hold."))
 				else
-					caused_wound?.werewolf_infect_attempt()
+					// caused_wound?.werewolf_infect_attempt() // DISABLED - Werewolves no longer infect via bites
 					if(prob(30))
 						user.werewolf_feed(bite_victim, 10)
 			

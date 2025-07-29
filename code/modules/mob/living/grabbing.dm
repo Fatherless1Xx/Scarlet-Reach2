@@ -580,10 +580,10 @@
 		var/datum/wound/caused_wound = limb_grabbed.bodypart_attacked_by(BCLASS_BITE, damage, user, sublimb_grabbed, crit_message = TRUE)
 		if(user.mind && caused_wound)
 			/*
-				WEREWOLF CHEW.
+				WEREWOLF CHEW - INFECTION DISABLED
 			*/
 			if(istype(user.dna.species, /datum/species/werewolf))
-				caused_wound?.werewolf_infect_attempt()
+				// caused_wound?.werewolf_infect_attempt() // DISABLED - Werewolves no longer infect via chewing
 				if(prob(30))
 					user.werewolf_feed(C)
 
