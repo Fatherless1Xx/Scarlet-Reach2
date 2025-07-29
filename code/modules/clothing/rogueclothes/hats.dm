@@ -582,7 +582,6 @@
 	icon_state = "inqhat"
 	item_state = "inqhat"
 	sewrepair = TRUE
-	anvilrepair = null
 	max_integrity = 200
 	equip_delay_self = 4 SECONDS
 	armor = ARMOR_HEAD_PSYDON
