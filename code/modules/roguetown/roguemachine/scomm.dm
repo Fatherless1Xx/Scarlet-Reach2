@@ -20,6 +20,13 @@
 	var/obj/structure/roguemachine/scomm/called_by = null
 	var/spawned_rat = FALSE
 	var/garrisonline = FALSE
+	var/ready_to_send = FALSE
+	var/message_queue = ""
+	var/message_speaker = null
+	var/message_color = null
+	var/queued_message_language = null
+	var/message_spans = list()
+	var/message_timer = 0
 
 /obj/structure/roguemachine/scomm/OnCrafted(dirin, mob/user)
 	. = ..()
@@ -47,6 +54,10 @@
 	. = ..()
 	if(scom_number)
 		. += "Its designation is #[scom_number]."
+	if(ready_to_send)
+		. += span_green("The SCOM is ready to send a message.")
+	else
+		. += span_red("The SCOM needs a copper coin to send messages.")
 	if(user.loc == loc)
 		. += "<b>THE LAWS OF THE LAND:</b>"
 		if(!length(GLOB.laws_of_the_land))
@@ -67,6 +78,23 @@
 	if(!speaking)
 		return
 	say("The [SSticker.rulertype] Decrees: [pick(GLOB.lord_decrees)]", spans = list("info"))
+
+/obj/structure/roguemachine/scomm/attackby(obj/item/I, mob/user)
+	if(istype(I, /obj/item/roguecoin/copper))
+		if(ready_to_send)
+			to_chat(user, span_warning("The SCOM is already ready to send a message."))
+			return
+		var/obj/item/roguecoin/copper/coin = I
+		if(coin.quantity > 1)
+			coin.set_quantity(coin.quantity - 1)
+		else
+			user.doUnEquip(coin)
+			qdel(coin)
+		ready_to_send = TRUE
+		to_chat(user, span_notice("I insert a copper coin into the SCOM. It's now ready to send a message."))
+		playsound(src, 'sound/foley/coinphy (1).ogg', 100, FALSE, -1)
+		return
+	return ..()
 
 /obj/structure/roguemachine/scomm/attack_hand(mob/living/user)
 	. = ..()
@@ -263,35 +291,29 @@
 			if(calling.calling == src)
 				calling.repeat_message(raw_message, src, usedcolor, message_language, tspans)
 			return
-		if(length(raw_message) > 100) //When these people talk too much, put that shit in slow motion, yeah
-			/*if(length(raw_message) > 200)
-				if(!spawned_rat)
-					visible_message(span_warning("An angered rous emerges from the SCOMlines!"))
-					new /mob/living/simple_animal/hostile/retaliate/rogue/bigrat(get_turf(src))
-					spawned_rat = TRUE
-				return*/
-			raw_message = "<small>[raw_message]</small>"
-		if(garrisonline)
-			raw_message = "<span style='color: [GARRISON_SCOM_COLOR]'>[raw_message]</span>" //Prettying up for Garrison line
-			for(var/obj/item/scomstone/garrison/S in SSroguemachine.scomm_machines)
-				S.repeat_message(raw_message, src, usedcolor, message_language, tspans)
-			for(var/obj/item/scomstone/bad/garrison/S in SSroguemachine.scomm_machines)
-				S.repeat_message(raw_message, src, usedcolor, message_language, tspans)
-			for(var/obj/structure/roguemachine/scomm/S in SSroguemachine.scomm_machines)
-				if(S.garrisonline)
-					S.repeat_message(raw_message, src, usedcolor, message_language, tspans)
-			SSroguemachine.crown?.repeat_message(raw_message, src, usedcolor, message_language, tspans)
+		
+		// Check if SCOM is ready to send
+		if(!ready_to_send)
+			to_chat(H, span_warning("I need to insert a copper coin into the SCOM first!"))
 			return
-		if(H.client.patreonlevel() >= GLOB.patreonsaylevel)
-			raw_message = "<span class=\"[SPAN_PATREON_SAY]\">[raw_message]</span>"
-		for(var/obj/structure/roguemachine/scomm/S in SSroguemachine.scomm_machines)
-			if(!S.calling)
-				S.repeat_message(raw_message, src, usedcolor, message_language, tspans)
-		for(var/obj/item/scomstone/S in SSroguemachine.scomm_machines)
-			S.repeat_message(raw_message, src, usedcolor, message_language, tspans)
-		for(var/obj/item/listenstone/S in SSroguemachine.scomm_machines)
-			S.repeat_message(raw_message, src, usedcolor, message_language, tspans)//make the listenstone hear scom
-		SSroguemachine.crown?.repeat_message(raw_message, src, usedcolor, message_language, tspans)
+		
+		// Store message for delayed sending
+		message_queue = raw_message
+		message_speaker = H
+		message_color = usedcolor
+		queued_message_language = message_language
+		message_spans = tspans
+		message_timer = world.time + 30 SECONDS
+		
+		// Reset ready status
+		ready_to_send = FALSE
+		
+		to_chat(H, span_notice("My SCOM message will be sent in 30 seconds..."))
+		to_chat(world, span_notice("SCOM: Message queued: [raw_message]"))
+		
+		// Start the delayed sending
+		addtimer(CALLBACK(src, PROC_REF(send_queued_message)), 30 SECONDS)
+		return
 
 /obj/structure/roguemachine/scomm/proc/dictate_laws()
 	if(dictating)
@@ -310,6 +332,66 @@
 		sleep(2)
 		repeat_message("[i]. [GLOB.laws_of_the_land[i]]", tcolor = COLOR_RED)
 	dictating = FALSE
+
+/datum/scom_message
+	var/message
+	var/atom/source
+	var/usedcolor
+	var/message_language
+	var/list/tspans
+	var/garrisonline
+
+/datum/scom_message/New(msg, src, color, lang, spans, garrison)
+	message = msg
+	source = src
+	usedcolor = color
+	message_language = lang
+	tspans = spans
+	garrisonline = garrison
+
+
+
+/obj/structure/roguemachine/scomm/proc/send_queued_message()
+	if(QDELETED(src) || !message_queue)
+		return
+	
+	// Debug message to confirm the function is being called
+	to_chat(world, span_notice("SCOM: Sending queued message: [message_queue]"))
+	
+	var/raw_message = message_queue
+	var/usedcolor = message_color
+	var/message_language = queued_message_language
+	var/list/tspans = message_spans
+	
+	if(length(raw_message) > 100) //When these people talk too much, put that shit in slow motion, yeah
+		raw_message = "<small>[raw_message]</small>"
+	if(garrisonline)
+		raw_message = "<span style='color: [GARRISON_SCOM_COLOR]'>[raw_message]</span>" //Prettying up for Garrison line
+		for(var/obj/item/scomstone/garrison/S in SSroguemachine.scomm_machines)
+			S.repeat_message(raw_message, null, usedcolor, message_language, tspans)
+		for(var/obj/item/scomstone/bad/garrison/S in SSroguemachine.scomm_machines)
+			S.repeat_message(raw_message, null, usedcolor, message_language, tspans)
+		for(var/obj/structure/roguemachine/scomm/S in SSroguemachine.scomm_machines)
+			if(S.garrisonline)
+				S.repeat_message(raw_message, null, usedcolor, message_language, tspans)
+		SSroguemachine.crown?.repeat_message(raw_message, src, usedcolor, message_language, tspans)
+		return
+	for(var/obj/structure/roguemachine/scomm/S in SSroguemachine.scomm_machines)
+		if(!S.calling)
+			S.repeat_message(raw_message, null, usedcolor, message_language, tspans)
+	for(var/obj/item/scomstone/S in SSroguemachine.scomm_machines)
+		S.repeat_message(raw_message, null, usedcolor, message_language, tspans)
+	for(var/obj/item/listenstone/S in SSroguemachine.scomm_machines)//make the listenstone hear scom
+		S.repeat_message(raw_message, src, usedcolor, message_language, tspans)
+	SSroguemachine.crown?.repeat_message(raw_message, src, usedcolor, message_language, tspans)
+	
+	// Clear the message queue
+	message_queue = ""
+	message_speaker = null
+	message_color = null
+	queued_message_language = null
+	message_spans = list()
+	message_timer = 0
 
 /proc/scom_announce(message)
 	for(var/obj/structure/roguemachine/scomm/S in SSroguemachine.scomm_machines)
@@ -344,12 +426,30 @@
 	sellprice = 100
 	grid_width = 32
 	grid_height = 32
+	var/ready_to_send = FALSE
+	var/message_queue = ""
+	var/message_speaker = null
+	var/message_color = null
+	var/queued_message_language = null
+	var/message_spans = list()
+	var/message_timer = 0
 //wip
 /obj/item/scomstone/attack_right(mob/living/carbon/human/user)
 	user.changeNext_move(CLICK_CD_INTENTCAP)
 	var/input_text = input(user, "Enter your message:", "Message")
 	if(!input_text)
 		return
+	
+	// Check if scomstone is ready to send
+	if(!ready_to_send)
+		to_chat(user, span_warning("I need to insert a copper coin into the scomstone first!"))
+		return
+	
+	// Check if user has noble trait for free sending
+	if(!HAS_TRAIT(user, TRAIT_NOBLE))
+		// Remove the coin since it was used
+		ready_to_send = FALSE
+	
 	var/usedcolor = user.voice_color
 	if(user.voicecolor_override)
 		usedcolor = user.voicecolor_override
@@ -359,15 +459,19 @@
 		tspans |= SPAN_PATREON_SAY
 	if(user.client.patreonlevel() >= GLOB.patreonsaylevel)
 		input_text = "<span class=\"[SPAN_PATREON_SAY]\">[input_text]</span>"
-	if(length(input_text) > 100) //When these people talk too much, put that shit in slow motion, yeah
-		input_text = "<small>[input_text]</small>"
-	for(var/obj/structure/roguemachine/scomm/S in SSroguemachine.scomm_machines)
-		S.repeat_message(input_text, src, usedcolor, tspans = tspans)
-	for(var/obj/item/scomstone/S in SSroguemachine.scomm_machines)
-		S.repeat_message(input_text, src, usedcolor, tspans = tspans)
-	for(var/obj/item/listenstone/S in SSroguemachine.scomm_machines)//make the listenstone hear scomstone
-		S.repeat_message(input_text, src, usedcolor, tspans = tspans)
-	SSroguemachine.crown?.repeat_message(input_text, src, usedcolor, tspans = tspans)
+	
+	// Store message for delayed sending
+	message_queue = input_text
+	message_speaker = user
+	message_color = usedcolor
+	queued_message_language = null
+	message_spans = tspans
+	message_timer = world.time + 30 SECONDS
+	
+	to_chat(user, span_notice("My scomstone message will be sent in 30 seconds..."))
+	
+	// Start the delayed sending
+	addtimer(CALLBACK(src, PROC_REF(send_queued_scomstone_message)), 30 SECONDS)
 
 /obj/item/scomstone/MiddleClick(mob/user)
 	if(.)
@@ -387,6 +491,96 @@
 	. = ..()
 	update_icon()
 	SSroguemachine.scomm_machines += src
+
+/obj/item/scomstone/attackby(obj/item/I, mob/user)
+	if(istype(I, /obj/item/roguecoin/copper))
+		if(ready_to_send)
+			to_chat(user, span_warning("The scomstone is already ready to send a message."))
+			return
+		var/obj/item/roguecoin/copper/coin = I
+		if(coin.quantity > 1)
+			coin.set_quantity(coin.quantity - 1)
+		else
+			user.doUnEquip(coin)
+			qdel(coin)
+		ready_to_send = TRUE
+		to_chat(user, span_notice("I insert a copper coin into the scomstone. It's now ready to send a message."))
+		playsound(src, 'sound/foley/coinphy (1).ogg', 100, FALSE, -1)
+		return
+	return ..()
+
+/obj/item/scomstone/proc/send_queued_scomstone_message()
+	if(QDELETED(src) || !message_queue)
+		return
+	
+	var/raw_message = message_queue
+	var/usedcolor = message_color
+	var/list/tspans = message_spans
+	
+	if(length(raw_message) > 100) //When these people talk too much, put that shit in slow motion, yeah
+		raw_message = "<small>[raw_message]</small>"
+	
+	for(var/obj/structure/roguemachine/scomm/S in SSroguemachine.scomm_machines)
+		S.repeat_message(raw_message, src, usedcolor, tspans = tspans)
+	for(var/obj/item/scomstone/S in SSroguemachine.scomm_machines)
+		S.repeat_message(raw_message, src, usedcolor, tspans = tspans)
+	for(var/obj/item/listenstone/S in SSroguemachine.scomm_machines)//make the listenstone hear scomstone
+		S.repeat_message(raw_message, src, usedcolor, tspans = tspans)
+	SSroguemachine.crown?.repeat_message(raw_message, src, usedcolor, tspans = tspans)
+	
+	// Clear the message queue
+	message_queue = ""
+	message_speaker = null
+	message_color = null
+	queued_message_language = null
+	message_spans = list()
+	message_timer = 0
+
+/obj/item/scomstone/garrison/proc/send_queued_garrison_message()
+	if(QDELETED(src) || !message_queue)
+		return
+	
+	var/raw_message = message_queue
+	var/usedcolor = message_color
+	var/list/tspans = message_spans
+	
+	if(length(raw_message) > 100) //When these people talk too much, put that shit in slow motion, yeah
+		raw_message = "<small>[raw_message]</small>"
+	
+	if(garrisonline)
+		raw_message = "<big><span style='color: [GARRISON_SCOM_COLOR]'>[raw_message]</span></big>" //Prettying up for Garrison line
+		for(var/obj/item/scomstone/bad/garrison/S in SSroguemachine.scomm_machines)
+			S.repeat_message(raw_message, src, usedcolor, tspans = tspans)
+		for(var/obj/item/scomstone/garrison/S in SSroguemachine.scomm_machines)
+			S.repeat_message(raw_message, src, usedcolor, tspans = tspans)
+		for(var/obj/structure/roguemachine/scomm/S in SSroguemachine.scomm_machines)
+			if(S.garrisonline)
+				S.repeat_message(raw_message, src, usedcolor, tspans = tspans)
+		SSroguemachine.crown?.repeat_message(raw_message, src, usedcolor, tspans = tspans)
+		return
+	
+	for(var/obj/structure/roguemachine/scomm/S in SSroguemachine.scomm_machines)
+		S.repeat_message(raw_message, src, usedcolor, tspans = tspans)
+	for(var/obj/item/scomstone/S in SSroguemachine.scomm_machines)
+		S.repeat_message(raw_message, src, usedcolor, tspans = tspans)
+	for(var/obj/item/listenstone/S in SSroguemachine.scomm_machines)
+		S.repeat_message(raw_message, src, usedcolor, tspans = tspans)
+	SSroguemachine.crown?.repeat_message(raw_message, src, usedcolor, tspans = tspans)
+	
+	// Clear the message queue
+	message_queue = ""
+	message_speaker = null
+	message_color = null
+	queued_message_language = null
+	message_spans = list()
+	message_timer = 0
+
+/obj/item/scomstone/examine(mob/user)
+	. = ..()
+	if(ready_to_send)
+		. += span_green("The scomstone is ready to send a message.")
+	else
+		. += span_red("The scomstone needs a copper coin to send messages.")
 
 /obj/item/scomstone/proc/repeat_message(message, atom/A, tcolor, message_language, list/tspans = list())
 	if(A == src)
@@ -747,6 +941,17 @@
 	var/input_text = input(user, "Enter your message:", "Message")
 	if(!input_text)
 		return
+	
+	// Check if garrison scomstone is ready to send
+	if(!ready_to_send)
+		to_chat(user, span_warning("I need to insert a copper coin into the garrison scomstone first!"))
+		return
+	
+	// Check if user has noble trait for free sending
+	if(!HAS_TRAIT(user, TRAIT_NOBLE))
+		// Remove the coin since it was used
+		ready_to_send = FALSE
+	
 	var/usedcolor = user.voice_color
 	if(user.voicecolor_override)
 		usedcolor = user.voicecolor_override
@@ -754,26 +959,36 @@
 	var/list/tspans = list()
 	if(user.client.patreonlevel() >= GLOB.patreonsaylevel)
 		tspans |= SPAN_PATREON_SAY
-	if(length(input_text) > 100) //When these people talk too much, put that shit in slow motion, yeah
-		input_text = "<small>[input_text]</small>"
-	if(garrisonline)
-		input_text = "<big><span style='color: [GARRISON_SCOM_COLOR]'>[input_text]</span></big>" //Prettying up for Garrison line
-		for(var/obj/item/scomstone/bad/garrison/S in SSroguemachine.scomm_machines)
-			S.repeat_message(input_text, src, usedcolor, tspans = tspans)
-		for(var/obj/item/scomstone/garrison/S in SSroguemachine.scomm_machines)
-			S.repeat_message(input_text, src, usedcolor, tspans = tspans)
-		for(var/obj/structure/roguemachine/scomm/S in SSroguemachine.scomm_machines)
-			if(S.garrisonline)
-				S.repeat_message(input_text, src, usedcolor, tspans = tspans)
-		SSroguemachine.crown?.repeat_message(input_text, src, usedcolor, tspans = tspans)
+	
+	// Store message for delayed sending
+	message_queue = input_text
+	message_speaker = user
+	message_color = usedcolor
+	queued_message_language = null
+	message_spans = tspans
+	message_timer = world.time + 30 SECONDS
+	
+	to_chat(user, span_notice("My garrison scomstone message will be sent in 30 seconds..."))
+	
+	// Start the delayed sending
+	addtimer(CALLBACK(src, PROC_REF(send_queued_garrison_message)), 30 SECONDS)
+
+/obj/item/scomstone/garrison/attackby(obj/item/I, mob/user)
+	if(istype(I, /obj/item/roguecoin/copper))
+		if(ready_to_send)
+			to_chat(user, span_warning("The garrison scomstone is already ready to send a message."))
+			return
+		var/obj/item/roguecoin/copper/coin = I
+		if(coin.quantity > 1)
+			coin.set_quantity(coin.quantity - 1)
+		else
+			user.doUnEquip(coin)
+			qdel(coin)
+		ready_to_send = TRUE
+		to_chat(user, span_notice("I insert a copper coin into the garrison scomstone. It's now ready to send a message."))
+		playsound(src, 'sound/foley/coinphy (1).ogg', 100, FALSE, -1)
 		return
-	for(var/obj/structure/roguemachine/scomm/S in SSroguemachine.scomm_machines)
-		S.repeat_message(input_text, src, usedcolor, tspans = tspans)
-	for(var/obj/item/scomstone/S in SSroguemachine.scomm_machines)
-		S.repeat_message(input_text, src, usedcolor, tspans = tspans)
-	for(var/obj/item/listenstone/S in SSroguemachine.scomm_machines)
-		S.repeat_message(input_text, src, usedcolor, tspans = tspans)
-	SSroguemachine.crown?.repeat_message(input_text, src, usedcolor, tspans = tspans)
+	return ..()
 
 /obj/item/scomstone/garrison/attack_self(mob/living/user)
 	if(.)
@@ -783,6 +998,13 @@
 	garrisonline = !garrisonline
 	to_chat(user, span_info("I [garrisonline ? "connect to the garrison SCOMline" : "connect to the general SCOMline"]"))
 	update_icon()
+
+/obj/item/scomstone/garrison/examine(mob/user)
+	. = ..()
+	if(ready_to_send)
+		. += span_green("The garrison scomstone is ready to send a message.")
+	else
+		. += span_red("The garrison scomstone needs a copper coin to send messages.")
 
 /obj/item/scomstone/garrison/update_icon()
 	icon_state = "[initial(icon_state)][garrisonline ? "_on" : ""]"
