@@ -443,10 +443,8 @@
 		to_chat(user, span_warning("I need to insert a copper coin into the scomstone first!"))
 		return
 	
-	// Check if user has noble trait for free sending
-	if(!HAS_TRAIT(user, TRAIT_NOBLE))
-		// Remove the coin since it was used
-		ready_to_send = FALSE
+	// Remove the coin since it was used
+	ready_to_send = FALSE
 	
 	var/usedcolor = user.voice_color
 	if(user.voicecolor_override)
@@ -947,10 +945,8 @@
 		to_chat(user, span_warning("I need to insert a copper coin into the garrison scomstone first!"))
 		return
 	
-	// Check if user has noble trait for free sending
-	if(!HAS_TRAIT(user, TRAIT_NOBLE))
-		// Remove the coin since it was used
-		ready_to_send = FALSE
+	// Remove the coin since it was used
+	ready_to_send = FALSE
 	
 	var/usedcolor = user.voice_color
 	if(user.voicecolor_override)
