@@ -309,7 +309,6 @@
 		ready_to_send = FALSE
 		
 		to_chat(H, span_notice("My SCOM message will be sent in 30 seconds..."))
-		to_chat(world, span_notice("SCOM: Message queued: [raw_message]"))
 		
 		// Start the delayed sending
 		addtimer(CALLBACK(src, PROC_REF(send_queued_message)), 30 SECONDS)
@@ -355,8 +354,7 @@
 	if(QDELETED(src) || !message_queue)
 		return
 	
-	// Debug message to confirm the function is being called
-	to_chat(world, span_notice("SCOM: Sending queued message: [message_queue]"))
+
 	
 	var/raw_message = message_queue
 	var/usedcolor = message_color
@@ -521,12 +519,12 @@
 		raw_message = "<small>[raw_message]</small>"
 	
 	for(var/obj/structure/roguemachine/scomm/S in SSroguemachine.scomm_machines)
-		S.repeat_message(raw_message, src, usedcolor, tspans = tspans)
+		S.repeat_message(raw_message, null, usedcolor, tspans = tspans)
 	for(var/obj/item/scomstone/S in SSroguemachine.scomm_machines)
-		S.repeat_message(raw_message, src, usedcolor, tspans = tspans)
+		S.repeat_message(raw_message, null, usedcolor, tspans = tspans)
 	for(var/obj/item/listenstone/S in SSroguemachine.scomm_machines)//make the listenstone hear scomstone
-		S.repeat_message(raw_message, src, usedcolor, tspans = tspans)
-	SSroguemachine.crown?.repeat_message(raw_message, src, usedcolor, tspans = tspans)
+		S.repeat_message(raw_message, null, usedcolor, tspans = tspans)
+	SSroguemachine.crown?.repeat_message(raw_message, null, usedcolor, tspans = tspans)
 	
 	// Clear the message queue
 	message_queue = ""
@@ -535,6 +533,7 @@
 	queued_message_language = null
 	message_spans = list()
 	message_timer = 0
+	ready_to_send = FALSE
 
 /obj/item/scomstone/garrison/proc/send_queued_garrison_message()
 	if(QDELETED(src) || !message_queue)
@@ -550,22 +549,22 @@
 	if(garrisonline)
 		raw_message = "<big><span style='color: [GARRISON_SCOM_COLOR]'>[raw_message]</span></big>" //Prettying up for Garrison line
 		for(var/obj/item/scomstone/bad/garrison/S in SSroguemachine.scomm_machines)
-			S.repeat_message(raw_message, src, usedcolor, tspans = tspans)
+			S.repeat_message(raw_message, null, usedcolor, tspans = tspans)
 		for(var/obj/item/scomstone/garrison/S in SSroguemachine.scomm_machines)
-			S.repeat_message(raw_message, src, usedcolor, tspans = tspans)
+			S.repeat_message(raw_message, null, usedcolor, tspans = tspans)
 		for(var/obj/structure/roguemachine/scomm/S in SSroguemachine.scomm_machines)
 			if(S.garrisonline)
-				S.repeat_message(raw_message, src, usedcolor, tspans = tspans)
-		SSroguemachine.crown?.repeat_message(raw_message, src, usedcolor, tspans = tspans)
+				S.repeat_message(raw_message, null, usedcolor, tspans = tspans)
+		SSroguemachine.crown?.repeat_message(raw_message, null, usedcolor, tspans = tspans)
 		return
 	
 	for(var/obj/structure/roguemachine/scomm/S in SSroguemachine.scomm_machines)
-		S.repeat_message(raw_message, src, usedcolor, tspans = tspans)
+		S.repeat_message(raw_message, null, usedcolor, tspans = tspans)
 	for(var/obj/item/scomstone/S in SSroguemachine.scomm_machines)
-		S.repeat_message(raw_message, src, usedcolor, tspans = tspans)
+		S.repeat_message(raw_message, null, usedcolor, tspans = tspans)
 	for(var/obj/item/listenstone/S in SSroguemachine.scomm_machines)
-		S.repeat_message(raw_message, src, usedcolor, tspans = tspans)
-	SSroguemachine.crown?.repeat_message(raw_message, src, usedcolor, tspans = tspans)
+		S.repeat_message(raw_message, null, usedcolor, tspans = tspans)
+	SSroguemachine.crown?.repeat_message(raw_message, null, usedcolor, tspans = tspans)
 	
 	// Clear the message queue
 	message_queue = ""
@@ -574,6 +573,7 @@
 	queued_message_language = null
 	message_spans = list()
 	message_timer = 0
+	ready_to_send = FALSE
 
 /obj/item/scomstone/examine(mob/user)
 	. = ..()
