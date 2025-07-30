@@ -18,6 +18,7 @@
 	var/wwbreastsize = 3
 	var/wolfname = "Verewolf"
 	var/wretch_antag = FALSE
+	var/list/mob_timers = list()
 
 /datum/antagonist/werewolf/lesser
 	name = "Lesser Verewolf"

@@ -8,6 +8,69 @@
 	if(H.advsetup) return
 	if(HAS_TRAIT(H, TRAIT_SILVER_BLESSED)) return
 
+	// Periodic healing and messaging for transformed werewolves
+	if(transformed)
+		// Check if it's time for periodic healing (every 3 minutes)
+		if(!mob_timers["werewolf_healing"])
+			mob_timers["werewolf_healing"] = world.time
+		
+		if(world.time >= mob_timers["werewolf_healing"] + 3 MINUTES)
+			// Enhanced healing effect
+			H.adjustBruteLoss(-25)
+			H.adjustFireLoss(-25)
+			
+			// Heal bleeding wounds
+			for(var/obj/item/bodypart/BP in H.bodyparts)
+				if(BP.wounds)
+					for(var/datum/wound/W in BP.wounds)
+						if(istype(W, /datum/wound/slash) || istype(W, /datum/wound/puncture))
+							W.heal_wound(50)
+			
+			// Repair natural armor
+			if(H.skin_armor && H.skin_armor.obj_integrity < H.skin_armor.max_integrity)
+				H.skin_armor.obj_integrity = min(H.skin_armor.obj_integrity + 50, H.skin_armor.max_integrity)
+				if(H.skin_armor.obj_broken && H.skin_armor.obj_integrity >= H.skin_armor.max_integrity)
+					H.skin_armor.obj_fix()
+			
+			// Varied messages for the werewolf
+			var/list/werewolf_messages = list(
+				"I'M FULL OF HATRED AND WANT TO KILL!",
+				"THE BEAST WITHIN DEMANDS BLOOD!",
+				"I CAN SMELL THEIR FEAR... IT MAKES ME STRONGER!",
+				"THE MOON'S POWER COURSES THROUGH MY VEINS!",
+				"MY WOUNDS HEAL WITH THE FURY OF THE WOLF!",
+				"I FEEL THE PRIMAL RAGE BUILDING INSIDE!",
+				"THE HUNT CALLS TO ME... I MUST KILL!",
+				"MY CLAWS ITCH FOR THE TASTE OF FLESH!",
+				"THE WOLF SPIRIT MAKES ME INVINCIBLE!",
+				"I AM THE NIGHT... I AM DEATH!"
+			)
+			to_chat(H, span_userdanger(pick(werewolf_messages)))
+			
+			// Varied messages for others nearby
+			var/list/observer_messages = list(
+				"You notice [H]'s fur knitting itself back together.",
+				"[H]'s wounds seem to be closing up rapidly.",
+				"The gashes on [H]'s body are healing before your eyes.",
+				"[H]'s fur appears to be regenerating at an unnatural rate.",
+				"You watch as [H]'s injuries fade away like magic.",
+				"[H]'s body seems to be repairing itself with supernatural speed.",
+				"The blood on [H]'s fur is disappearing as wounds close.",
+				"[H]'s injuries are vanishing as if they were never there.",
+				"You see [H]'s torn flesh mending itself back together.",
+				"[H]'s body is healing with impossible speed.",
+				"[H]'s natural armor appears to be mending itself.",
+				"You see [H]'s toughened hide repairing damage.",
+				"[H]'s thick fur seems to be regenerating its protective layers.",
+				"[H]'s hide appears to be knitting back together stronger than before."
+			)
+			for(var/mob/living/L in view(7, H))
+				if(L != H && L.client)
+					to_chat(L, span_notice(pick(observer_messages)))
+			
+			// Reset timer
+			mob_timers["werewolf_healing"] = world.time
+
 	// Werewolf transforms at night AND under the sky
 	if(!transformed && !transforming)
 		if(GLOB.tod == "night")
