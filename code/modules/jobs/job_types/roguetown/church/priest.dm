@@ -243,6 +243,10 @@ GLOBAL_LIST_EMPTY(heretical_players)
 		if(!istype(get_area(src), /area/rogue/indoors/town/church/chapel))
 			to_chat(src, span_warning("I need to do this from the chapel."))
 			return FALSE
+		if(!devotion || devotion.devotion < 1000)
+			to_chat(src, span_warning("I need at least 1000 devotion to make an announcement!"))
+			return FALSE
+		devotion.update_devotion(-1000, 0)
 		priority_announce("[inputty]", title = "The Priest Speaks", sound = 'sound/misc/bell.ogg', sender = src)
 
 /mob/living/carbon/human/proc/churcheapostasy()
