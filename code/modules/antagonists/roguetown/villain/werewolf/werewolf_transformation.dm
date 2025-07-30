@@ -27,10 +27,16 @@
 							W.heal_wound(50)
 			
 			// Repair natural armor
-			if(H.skin_armor && H.skin_armor.obj_integrity < H.skin_armor.max_integrity)
-				H.skin_armor.obj_integrity = min(H.skin_armor.obj_integrity + 50, H.skin_armor.max_integrity)
-				if(H.skin_armor.obj_broken && H.skin_armor.obj_integrity >= H.skin_armor.max_integrity)
-					H.skin_armor.obj_fix()
+			var/obj/item/clothing/suit/roguetown/armor/skin_armor/werewolf_skin/skin = null
+			for(var/obj/item/item in H.contents)
+				if(istype(item, /obj/item/clothing/suit/roguetown/armor/skin_armor/werewolf_skin))
+					skin = item
+					break
+			
+			if(skin && skin.obj_integrity < skin.max_integrity)
+				skin.obj_integrity = min(skin.obj_integrity + 50, skin.max_integrity)
+				if(skin.obj_broken && skin.obj_integrity >= skin.max_integrity)
+					skin.obj_fix()
 			
 			// Varied messages for the werewolf
 			var/list/werewolf_messages = list(
