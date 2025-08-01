@@ -12,9 +12,36 @@
 
 /datum/virtue/utility/socialite
 	name = "Socialite"
-	desc = "I thrive in social settings, easily reading the emotions of others and charming those around me. My presence is always felt at any gathering."
-	custom_text = "Incompatible with Ugly virtue. Grants empathic insight."
+	desc = "I thrive in social settings, easily reading the emotions of others and charming those around me. My presence is always felt at any gathering, and I can communicate in every tongue known to the world."
+	custom_text = "Incompatible with Ugly virtue. Grants empathic insight and knowledge of ALL languages."
 	added_traits = list(TRAIT_BEAUTIFUL, TRAIT_GOODLOVER, TRAIT_EMPATH)
+
+/datum/virtue/utility/socialite/apply_to_human(mob/living/carbon/human/recipient)
+	addtimer(CALLBACK(src, .proc/socialite_apply, recipient), 50)
+
+/datum/virtue/utility/socialite/proc/socialite_apply(mob/living/carbon/human/recipient)
+	
+	var/static/list/roguetown_languages = list(
+		/datum/language/elvish,
+		/datum/language/dwarvish,
+		/datum/language/orcish,
+		/datum/language/hellspeak,
+		/datum/language/celestial,
+		/datum/language/thievescant,
+		/datum/language/beast,
+		/datum/language/grenzelhoftian,
+		/datum/language/kazengunese,
+		/datum/language/otavan,
+		/datum/language/etruscan,
+		/datum/language/gronnic,
+		/datum/language/aavnic
+	)
+
+	for(var/language_type in roguetown_languages)
+		if(!recipient.has_language(language_type))
+			recipient.grant_language(language_type)
+			var/datum/language/lang_instance = new language_type()
+			qdel(lang_instance)
 
 /datum/virtue/utility/socialite/handle_traits(mob/living/carbon/human/recipient)
 	..()
@@ -163,6 +190,8 @@
 				choices -= chosen_language
 				to_chat(recipient, span_info("I recall my knowledge of [chosen_language]..."))
 				count--
+
+
 
 /datum/virtue/utility/deathless
 	name = "Deathless"
