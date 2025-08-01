@@ -1361,10 +1361,10 @@ GLOBAL_VAR_INIT(rpg_loot_items, FALSE)
 /obj/item/proc/peel_coverage(bodypart, divisor)
 	var/coveragezone = attackzone2coveragezone(bodypart)
 	if(!(body_parts_inherent & coveragezone))
-		// Check if armor integrity is below 50% before allowing peel stacks
+		// Check if armor durability is below 50% before allowing peel stacks
 		if(max_integrity != 0)
-			var/int_percent = round(((obj_integrity / max_integrity) * 100), 1)
-			if(int_percent >= 50)
+			var/durability_percent = round(((obj_integrity / max_integrity) * 100), 1)
+			if(durability_percent >= 50)
 				visible_message(span_info("The armor is too intact to peel effectively!"))
 				return
 		
