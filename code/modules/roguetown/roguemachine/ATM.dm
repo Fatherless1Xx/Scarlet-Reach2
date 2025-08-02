@@ -67,7 +67,7 @@
 			return
 		
 		// Check maximum coin limit before deducting balance
-		var/max_coins = 100
+		var/max_coins = 20
 		if(coin_amt > max_coins)
 			to_chat(user, span_warning("Maximum withdrawal limit exceeded. You can only withdraw up to [max_coins] coins at once."))
 			playsound(src, 'sound/misc/machineno.ogg', 100, FALSE, -1)
