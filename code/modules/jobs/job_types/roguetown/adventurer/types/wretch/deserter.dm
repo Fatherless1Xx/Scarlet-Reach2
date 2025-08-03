@@ -45,7 +45,6 @@
 				H.mind.AddSpell(new /obj/effect/proc_holder/spell/invoked/order/bolster)
 				H.mind.AddSpell(new /obj/effect/proc_holder/spell/invoked/order/brotherhood)
 				H.mind.AddSpell(new /obj/effect/proc_holder/spell/invoked/order/charge)
-				H.mind.AddSpell(new /obj/effect/proc_holder/spell/self/convertrole/brotherhood)
 
 			var/weapons = list(
 				"Estoc",
@@ -239,13 +238,6 @@
 		if(!msg)
 			to_chat(user, span_alert("I must say something to give an order!"))
 			return
-		if(user.job == "Deserter")
-			if(!(target.job in list("Brotherhood")))
-				to_chat(user, span_alert("I cannot order one not of the brotherhood cause!"))
-				return		
-		if(target == user)
-			to_chat(user, span_alert("I cannot order myself!"))
-			return
 		user.say("[msg]")
 		target.apply_status_effect(/datum/status_effect/buff/order/retreat)
 		return TRUE
@@ -297,13 +289,6 @@
 		if(!msg)
 			to_chat(user, span_alert("I must say something to give an order!"))
 			return
-		if(user.job == "Deserter")
-			if(!(target.job in list("Brotherhood")))
-				to_chat(user, span_alert("I cannot order one not of the brotherhood cause!"))
-				return		
-		if(target == user)
-			to_chat(user, span_alert("I cannot order myself!"))
-			return
 		user.say("[msg]")
 		target.apply_status_effect(/datum/status_effect/buff/order/bolster)
 		return TRUE
@@ -311,7 +296,7 @@
 	return FALSE
 
 /obj/effect/proc_holder/spell/invoked/order/brotherhood
-	name = "For the Brotherhood!"
+	name = "Stand Your Ground!"
 	overlay_state = "onfeet"
 
 /obj/effect/proc_holder/spell/invoked/order/brotherhood/cast(list/targets, mob/living/user)
@@ -321,13 +306,6 @@
 		var/msg = user.mind.brotherhoodtext
 		if(!msg)
 			to_chat(user, span_alert("I must say something to give an order!"))
-			return
-		if(user.job == "Deserter")
-			if(!(target.job in list("Brotherhood")))
-				to_chat(user, span_alert("I cannot order one not of the brotherhood cause!"))
-				return		
-		if(target == user)
-			to_chat(user, span_alert("I cannot order myself!"))
 			return
 		user.say("[msg]")
 		target.apply_status_effect(/datum/status_effect/buff/order/brotherhood)
@@ -350,12 +328,12 @@
 
 /atom/movable/screen/alert/status_effect/buff/order/brotherhood
 	name = "Stand your Ground!"
-	desc = "My commander has ordered me to stand proud for the brotherhood!"
+	desc = "My commander has ordered me to stand proud!"
 	icon_state = "buff"
 
 /datum/status_effect/buff/order/brotherhood/on_apply()
 	. = ..()
-	to_chat(owner, span_blue("My commander orders me to stand proud for the brotherhood!"))
+	to_chat(owner, span_blue("My commander orders me to stand proud!"))
 	ADD_TRAIT(owner, TRAIT_NOPAIN, TRAIT_GENERIC)
 
 /datum/status_effect/buff/order/onfeet/on_remove()
@@ -375,13 +353,6 @@
 		var/msg = user.mind.holdtext
 		if(!msg)
 			to_chat(user, span_alert("I must say something to give an order!"))
-			return
-		if(user.job == "Deserter")
-			if(!(target.job in list("Brotherhood")))
-				to_chat(user, span_alert("I cannot order one not of the brotherhood cause!"))
-				return		
-		if(target == user)
-			to_chat(user, span_alert("I cannot order myself!"))
 			return
 		user.say("[msg]")
 		target.apply_status_effect(/datum/status_effect/buff/order/charge)
@@ -403,7 +374,7 @@
 
 /datum/status_effect/buff/order/charge/on_apply()
 	. = ..()
-	to_chat(owner, span_blue("My commander orders me to charge! For the brotherhood!"))
+	to_chat(owner, span_blue("My commander orders me to charge!"))
 
 
 
@@ -422,7 +393,7 @@
 	if(!mind.bolstertext)
 		to_chat(src, "I must rehearse something for this order...")
 		return
-	mind.brotherhoodtext = input("Send a message.", "Stand proud, for the brotherhood!!") as text|null
+	mind.brotherhoodtext = input("Send a message.", "Stand proud!!") as text|null
 	if(!mind.brotherhoodtext)
 		to_chat(src, "I must rehearse something for this order...")
 		return
