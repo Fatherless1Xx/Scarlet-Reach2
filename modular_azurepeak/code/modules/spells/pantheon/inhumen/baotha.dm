@@ -85,7 +85,7 @@
 	if(iscarbon(M))
 		var/mob/living/carbon/C = M
 		
-		// Apply emberwine reagent (like drinking it)
+		// Apply emberwine reagent 
 		C.reagents.add_reagent(/datum/reagent/consumable/ethanol/beer/emberwine, 12)
 		
 		// Apply emberwine status effect immediately for spell effect
@@ -93,12 +93,15 @@
 		
 		// Apply drunk effects
 		C.drunkenness = 15
-		C.apply_status_effect(/datum/status_effect/buff/drunk)
 		C.Dizzy(25)
+		C.jitteriness = 20
+		C.add_movespeed_modifier(MOVESPEED_ID_DAMAGE_SLOWDOWN, multiplicative_slowdown = 2.0)
 		
-		// Apply confusion for drunk walking (like flash effects)
+		// Apply confusion for drunk walking
 		if(C.flash_act(2))
-			C.confused += 30 // Higher confusion for more noticeable drunk walking
+			C.confused += 30
+		
+		addtimer(CALLBACK(C, TYPE_PROC_REF(/mob/living/carbon, remove_movespeed_modifier), MOVESPEED_ID_DAMAGE_SLOWDOWN), 5 SECONDS)
 		
 		to_chat(C, span_notice("You feel the warmth of Baotha's divine dust coursing through your veins..."))
 
@@ -136,7 +139,7 @@
 		// Apply divine protection status effect
 		target.apply_status_effect(/datum/status_effect/buff/divine_protection, 1 MINUTES)
 		
-		// Send message about feeling invincible
+		
 		to_chat(target, span_notice("I feel invincible! Nothing can harm me while Baotha's grace protects me!"))
 		
 		return TRUE
