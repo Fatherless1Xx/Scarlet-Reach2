@@ -5,12 +5,14 @@
 	overlay_state = "lesserheal"
 	releasedrain = 30
 	chargedrain = 0
-	chargetime = 0
+	chargetime = 5
 	range = 4
 	warnie = "sydwarning"
 	movement_interrupt = FALSE
 	sound = 'sound/magic/heal.ogg'
-	invocation_type = "none"
+	chargedloop = /datum/looping_sound/invokeholy
+	invocation_type = "shout"
+	invocation = "Praise Baotha! Grant us your divine indulgence!"
 	associated_skill = /datum/skill/magic/holy
 	antimagic_allowed = TRUE
 	recharge_time = 30 SECONDS
@@ -29,8 +31,20 @@
 			to_chat(user, span_warning("They're already blessed by these effects!"))
 			revert_cast()
 			return FALSE
-		target.apply_status_effect(/datum/status_effect/buff/druqks/baotha) //Gets the trait temorarily, basically will just stop any active/upcoming ODs.	
+		target.apply_status_effect(/datum/status_effect/buff/druqks/baotha) //Gets the trait temorarily, basically will just stop any active/upcoming ODs.
+		
+		// Fill hunger and thirst
+		if(iscarbon(target))
+			var/mob/living/carbon/C = target
+			C.adjust_nutrition(500) // Fill to well-fed level
+			C.adjust_hydration(500) // Fill to hydrated level
+		
+		// Restore stamina
+		target.stamina_add(50)
+		
 		target.visible_message("<span class='info'>[target]'s eyes appear to gloss over!</span>", "<span class='notice'>I feel.. at ease.</span>")
+		
+		return TRUE
 
 //Enrapturing Powder - T2, basically a crackhead blowing cocaine in your face.
 
@@ -46,8 +60,8 @@
 	chargedrain = 0
 	chargetime = 15
 	recharge_time = 10 SECONDS
-	invocation_type = "whisper"
-	invocation = "Have a taste of the maiden's pure-bliss..."
+	invocation = "Baotha's divine dust, embrace the ecstasy!"
+	invocation_type = "shout"
 	devotion_cost = 30
 
 /obj/projectile/magic/blowingdust
@@ -59,13 +73,44 @@
 	poisonfeel = "burning" //Would make sense for your eyes or nose to burn, I guess.
 	poisonamount = 8 //Decent bit of high, three doses would be just above the overdose threshold if applied fast enough.
 
-/obj/projectile/magic/blowingdust/on_hit(target, mob/living/M)
+/obj/projectile/magic/blowingdust/on_hit(target)
 	. = ..()
-	if(!istype(M))
+	if(!istype(target, /mob/living))
 		return
-	if(target)
-		to_chat(target, span_warning("Gah! Something.. got in my - eyes.."))
-		M.blur_eyes(2)
+		
+	var/mob/living/M = target
+	to_chat(M, span_warning("Gah! Something.. got in my - eyes.."))
+	M.blur_eyes(2)
+	
+	if(iscarbon(M))
+		var/mob/living/carbon/C = M
+		
+		// Debug message to confirm the projectile hit
+		to_chat(C, span_notice("DEBUG: Enrapturing Powder hit! Applying effects..."))
+		
+		// Apply emberwine reagent (like drinking it)
+		C.reagents.add_reagent(/datum/reagent/consumable/ethanol/beer/emberwine, 12)
+		to_chat(C, span_notice("DEBUG: Added emberwine reagent"))
+		
+		// Apply emberwine status effect immediately for spell effect
+		C.apply_status_effect(/datum/status_effect/debuff/emberwine)
+		to_chat(C, span_notice("DEBUG: Applied emberwine status effect immediately"))
+		
+		// Apply drunk effects
+		C.drunkenness = 15
+		C.apply_status_effect(/datum/status_effect/buff/drunk)
+		C.Dizzy(25)
+		to_chat(C, span_notice("DEBUG: Applied drunk effects"))
+		
+		// Apply confusion for drunk walking (like flash effects)
+		if(C.flash_act(2))
+			C.confused += 30 // Higher confusion for more noticeable drunk walking
+			to_chat(C, span_notice("DEBUG: Applied flash and confusion"))
+		else
+			to_chat(C, span_notice("DEBUG: Flash failed, applying confusion anyway"))
+			C.confused += 30
+		
+		to_chat(C, span_notice("You feel the warmth of Baotha's divine dust coursing through your veins..."))
 
 //Numbing Pleasure - T3, removes all pain from self for a period of time. (Similar to Ravox's without any blood-clotting and better pain suppression + good mood buff.)
 /obj/effect/proc_holder/spell/invoked/painkiller
@@ -77,7 +122,7 @@
 	range = 7
 	warnie = "sydwarning"
 	sound = 'sound/magic/timestop.ogg'
-	invocation = "May you find bliss through your pain!"
+	invocation = "By Baotha's grace, let pain become pleasure!"
 	invocation_type = "shout"
 	associated_skill = /datum/skill/magic/holy
 	antimagic_allowed = TRUE
@@ -96,6 +141,14 @@
 		phy.pain_mod *= 0.5	//Literally halves your pain modifier.
 		addtimer(VARSET_CALLBACK(phy, pain_mod, phy.pain_mod /= 0.5), 1 MINUTES)	//Adds back the 0.5 of pain, basically setting it back to 1.
 		target.apply_status_effect(/datum/status_effect/buff/vitae)					//Basically lowers fortune by 2 but +3 speed, it's powerful. Drugs cus Baotha.
+		
+		// Apply divine protection - no blood loss, no  uncon, no death.
+		// Apply divine protection status effect
+		target.apply_status_effect(/datum/status_effect/buff/divine_protection, 1 MINUTES)
+		
+		// Send message about feeling invincible
+		to_chat(target, span_notice("I feel invincible! Nothing can harm me while Baotha's grace protects me!"))
+		
 		return TRUE
 
 //T0 that tells the user the person's vice.

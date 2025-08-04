@@ -208,6 +208,37 @@
 	owner.cmode_music = originalcmode
 	. = ..()
 
+/datum/status_effect/buff/divine_protection
+	id = "divine_protection"
+	alert_type = /atom/movable/screen/alert/status_effect/buff/divine_protection
+	duration = 1 MINUTES
+
+/datum/status_effect/buff/divine_protection/on_apply()
+	. = ..()
+	ADD_TRAIT(owner, TRAIT_BLOODLOSS_IMMUNE, TRAIT_MIRACLE)
+	ADD_TRAIT(owner, TRAIT_STUNIMMUNE, TRAIT_MIRACLE)
+	ADD_TRAIT(owner, TRAIT_NODEATH, TRAIT_MIRACLE)
+	ADD_TRAIT(owner, TRAIT_INFINITE_STAMINA, TRAIT_MIRACLE)
+	ADD_TRAIT(owner, TRAIT_NOPAIN, TRAIT_MIRACLE)
+	ADD_TRAIT(owner, TRAIT_NOPAINSTUN, TRAIT_MIRACLE)
+
+/datum/status_effect/buff/divine_protection/on_remove()
+	REMOVE_TRAIT(owner, TRAIT_BLOODLOSS_IMMUNE, TRAIT_MIRACLE)
+	REMOVE_TRAIT(owner, TRAIT_STUNIMMUNE, TRAIT_MIRACLE)
+	REMOVE_TRAIT(owner, TRAIT_NODEATH, TRAIT_MIRACLE)
+	REMOVE_TRAIT(owner, TRAIT_INFINITE_STAMINA, TRAIT_MIRACLE)
+	REMOVE_TRAIT(owner, TRAIT_NOPAIN, TRAIT_MIRACLE)
+	REMOVE_TRAIT(owner, TRAIT_NOPAINSTUN, TRAIT_MIRACLE)
+	
+	
+	to_chat(owner, span_warning("Baotha's divine protection fades away... I am vulnerable once more."))
+	. = ..()
+
+/atom/movable/screen/alert/status_effect/buff/divine_protection
+	name = "Divine Protection"
+	desc = "Baotha's grace protects me from all harm."
+	icon_state = "divine_protection"
+
 /datum/status_effect/buff/weed
 	id = "weed"
 	alert_type = /atom/movable/screen/alert/status_effect/buff/weed
