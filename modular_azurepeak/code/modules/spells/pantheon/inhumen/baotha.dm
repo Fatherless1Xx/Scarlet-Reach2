@@ -85,30 +85,20 @@
 	if(iscarbon(M))
 		var/mob/living/carbon/C = M
 		
-		// Debug message to confirm the projectile hit
-		to_chat(C, span_notice("DEBUG: Enrapturing Powder hit! Applying effects..."))
-		
 		// Apply emberwine reagent (like drinking it)
 		C.reagents.add_reagent(/datum/reagent/consumable/ethanol/beer/emberwine, 12)
-		to_chat(C, span_notice("DEBUG: Added emberwine reagent"))
 		
 		// Apply emberwine status effect immediately for spell effect
 		C.apply_status_effect(/datum/status_effect/debuff/emberwine)
-		to_chat(C, span_notice("DEBUG: Applied emberwine status effect immediately"))
 		
 		// Apply drunk effects
 		C.drunkenness = 15
 		C.apply_status_effect(/datum/status_effect/buff/drunk)
 		C.Dizzy(25)
-		to_chat(C, span_notice("DEBUG: Applied drunk effects"))
 		
 		// Apply confusion for drunk walking (like flash effects)
 		if(C.flash_act(2))
 			C.confused += 30 // Higher confusion for more noticeable drunk walking
-			to_chat(C, span_notice("DEBUG: Applied flash and confusion"))
-		else
-			to_chat(C, span_notice("DEBUG: Flash failed, applying confusion anyway"))
-			C.confused += 30
 		
 		to_chat(C, span_notice("You feel the warmth of Baotha's divine dust coursing through your veins..."))
 
@@ -126,7 +116,7 @@
 	invocation_type = "shout"
 	associated_skill = /datum/skill/magic/holy
 	antimagic_allowed = TRUE
-	recharge_time = 90 SECONDS
+	recharge_time = 10 MINUTES
 	miracle = TRUE
 	devotion_cost = 75
 
