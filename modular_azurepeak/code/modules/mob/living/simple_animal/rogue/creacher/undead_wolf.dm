@@ -62,12 +62,27 @@
 	var/is_downed = FALSE
 	var/legs_broken = FALSE
 
+	var/mob/living/master = null
+	var/is_summoned = FALSE
+
 	retreat_health = 0
 	attack_sound = list('sound/vo/mobs/vw/attack (1).ogg','sound/vo/mobs/vw/attack (2).ogg','sound/vo/mobs/vw/attack (3).ogg','sound/vo/mobs/vw/attack (4).ogg')
 
 	AIStatus = AI_OFF
 	can_have_ai = FALSE
 	ai_controller = /datum/ai_controller/wolf_undead
+
+/mob/living/simple_animal/hostile/retaliate/rogue/wolf_undead/New(loc, mob/living/summoner = null, is_summoned = FALSE)
+	..(loc)
+	if(summoner)
+		master = summoner
+		is_summoned = TRUE
+		if(summoner.mind && summoner.mind.current)
+			faction |= "[summoner.mind.current.real_name]_faction"
+		else
+			faction |= "[summoner.name]_faction"
+	else
+		faction = list("zombie")
 
 /mob/living/simple_animal/hostile/retaliate/rogue/wolf_undead/Initialize()
 	. = ..()

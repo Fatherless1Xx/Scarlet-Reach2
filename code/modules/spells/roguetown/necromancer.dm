@@ -72,7 +72,7 @@
 	range = 7
 	sound = list('sound/magic/magnet.ogg')
 	releasedrain = 40
-	chargetime = 60
+	chargetime = 10
 	warnie = "spellwarning"
 	no_early_release = TRUE
 	charging_slowdown = 1
@@ -107,7 +107,7 @@
 /obj/effect/proc_holder/spell/invoked/raise_lesser_undead/necromancer
 	cabal_affine = TRUE
 	is_summoned = TRUE
-	recharge_time = 45 SECONDS
+	recharge_time = 30 SECONDS
 
 /obj/effect/proc_holder/spell/invoked/projectile/sickness
 	name = "Ray of Sickness"
