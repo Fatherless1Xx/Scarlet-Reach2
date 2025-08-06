@@ -122,6 +122,9 @@
 			summoner = user.name
 	if (is_summoned || cabal_affine)
 		faction |= "cabal"
+		// Enable AI for summoned skeletons
+		can_have_ai = TRUE
+		AIStatus = AI_ON
 	// adds the name of the summoner to the faction, to avoid the hooded "Unknown" bug with Skeleton IDs
 	if(user && user.mind && user.mind.current)
 		faction |= "[user.mind.current.real_name]_faction"

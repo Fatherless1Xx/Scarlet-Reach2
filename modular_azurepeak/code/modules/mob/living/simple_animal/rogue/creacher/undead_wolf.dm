@@ -77,6 +77,9 @@
 	if(summoner)
 		master = summoner
 		is_summoned = TRUE
+		// Enable AI for summoned wolves
+		can_have_ai = TRUE
+		AIStatus = AI_ON
 		if(summoner.mind && summoner.mind.current)
 			faction |= "[summoner.mind.current.real_name]_faction"
 		else

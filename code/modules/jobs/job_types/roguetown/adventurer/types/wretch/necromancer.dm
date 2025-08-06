@@ -138,9 +138,12 @@
 		revert_cast()
 		return FALSE
 	
-	// Assign the dreamfiend to the caster's faction
+	// Assign the dreamfiend to the caster's faction and enable AI
 	var/faction_tag = "[user.mind.current.real_name]_faction"
 	for(var/mob/living/simple_animal/hostile/rogue/dreamfiend/D in range(5, target))
 		D.faction |= faction_tag
+		// Enable AI specifically for necromancer's dreamfiend
+		D.can_have_ai = TRUE
+		D.AIStatus = AI_ON
 		break
 	return TRUE
