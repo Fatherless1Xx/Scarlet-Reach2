@@ -6,7 +6,7 @@
 	allowed_races = RACES_ALL_KINDS
 	outfit = /datum/outfit/job/roguetown/wretch/hedgemage
 	category_tags = list(CTAG_WRETCH)
-	traits_applied = list(TRAIT_STEELHEARTED, TRAIT_OUTLANDER, TRAIT_MAGEARMOR, TRAIT_OUTLAW, TRAIT_ARCYNE_T3, TRAIT_HERESIARCH)
+	traits_applied = list(TRAIT_STEELHEARTED, TRAIT_OUTLANDER, TRAIT_MAGEARMOR, TRAIT_OUTLAW, TRAIT_HERESIARCH)
 
 // Hedge Mage on purpose has nearly the same fit as a Adv Mage / Mage Associate who cast conjure armor roundstart. Call it meta disguise.
 /datum/outfit/job/roguetown/wretch/hedgemage/pre_equip(mob/living/carbon/human/H)
@@ -48,5 +48,14 @@
 	H.change_stat("speed", 1)
 	if(H.mind)
 		H.mind.AddSpell(new /obj/effect/proc_holder/spell/targeted/touch/prestidigitation)
-	H?.mind.adjust_spellpoints(27) // Unlike Rogue Mage, who gets 6 but DExpert, this one don't have DExpert but have more spell points than anyone but the CM. 
+	var/classes = list("Hedge Mage","Rogue Mage")
+	var/classchoice = input("Choose your archetypes", "Available archetypes") as anything in classes
+	switch(classchoice)
+		if("Hedge Mage")
+			H?.mind.adjust_spellpoints(28)
+			ADD_TRAIT(H, TRAIT_ARCYNE_T4, TRAIT_GENERIC)
+		if("Rogue Mage")
+			H?.mind.adjust_spellpoints(21)
+			ADD_TRAIT(H, TRAIT_DODGEEXPERT, TRAIT_GENERIC)
+			ADD_TRAIT(H, TRAIT_ARCYNE_T3, TRAIT_GENERIC)
 	wretch_select_bounty(H)
