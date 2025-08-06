@@ -322,6 +322,7 @@
 	body_parts_covered = NECK
 	prevent_crits = list()
 	blocksound = PLATEHIT
+	leashable = TRUE
 
 /obj/item/clothing/neck/roguetown/gorget/cursed_collar/Initialize()
 	. = ..()
@@ -639,12 +640,6 @@
 	bellsound = FALSE
 	bell = FALSE
 
-//This right here is how you init components without copying the same bloody init repeatedly like how armorcode does it. I really don't like how this is done in the rest of the codebase. So have a proper example ~Neri
-/obj/item/clothing/neck/roguetown/collar/Initialize(mapload)
-	if(bellsound == TRUE)
-		. = ..()
-		AddComponent(/datum/component/squeak, SFX_COLLARJINGLE, 50, 100, 1) //We want squeak so wearer jingles if touched while wearing collar
-
 /obj/item/clothing/neck/roguetown/collar/leather
 	name = "leather collar"
 	desc = "A sturdy leather collar."
@@ -670,6 +665,10 @@
 	dropshrink = 0.5
 	bellsound = TRUE
 
+/obj/item/clothing/neck/roguetown/collar/cowbell/Initialize(mapload)
+		. = ..()
+		AddComponent(/datum/component/squeak, SFX_COLLARJINGLE, 50, 100, 1) //We want squeak so wearer jingles if touched while wearing collar
+
 /obj/item/clothing/neck/roguetown/collar/catbell
 	name = "catbell collar"
 	desc = "A leather collar with a jingling catbell attached."
@@ -681,6 +680,10 @@
 	resistance_flags = FIRE_PROOF
 	dropshrink = 0.5
 	bellsound = TRUE
+
+/obj/item/clothing/neck/roguetown/collar/catbell/Initialize(mapload)
+		. = ..()
+		AddComponent(/datum/component/squeak, SFX_COLLARJINGLE, 50, 100, 1) //We want squeak so wearer jingles if touched while wearing collar
 
 /obj/item/clothing/neck/roguetown/collar/feldcollar
 	name = "feldcollar"
