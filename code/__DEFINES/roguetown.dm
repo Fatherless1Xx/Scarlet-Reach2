@@ -116,6 +116,7 @@
 	/datum/species/akula,\
 	/datum/species/moth,\
 	/datum/species/dracon,\
+	/datum/species/half_drake,\
 	/datum/species/anthromorph,\
 	/datum/species/anthromorphsmall,\
 	/datum/species/demihuman,\
@@ -192,6 +193,7 @@
 	/datum/species/akula,\
 	/datum/species/moth,\
 	/datum/species/dracon,\
+	/datum/species/half_drake,\
 	/datum/species/anthromorph,\
 	/datum/species/anthromorphsmall,\
 	/datum/species/demihuman,\
@@ -215,6 +217,7 @@
 	/datum/species/akula,\
 	/datum/species/moth,\
 	/datum/species/dracon,\
+	/datum/species/half_drake,\
 	/datum/species/anthromorph,\
 	/datum/species/anthromorphsmall,\
 	/datum/species/demihuman,\
@@ -238,6 +241,7 @@
 	/datum/species/akula,\
 	/datum/species/moth,\
 	/datum/species/dracon,\
+	/datum/species/half_drake,\
 	/datum/species/anthromorph,\
 	/datum/species/demihuman,\
 	/datum/species/halforc,\
@@ -255,6 +259,7 @@
 	/datum/species/akula,\
 	/datum/species/moth,\
 	/datum/species/dracon,\
+	/datum/species/half_drake,\
 	/datum/species/anthromorph,\
 	/datum/species/demihuman,\
 	/datum/species/golem/metal,\

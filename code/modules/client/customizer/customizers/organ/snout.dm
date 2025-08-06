@@ -249,3 +249,26 @@
 		/datum/sprite_accessory/snout/stubby,
 		/datum/sprite_accessory/snout/stubbyalt,
 		)
+
+/datum/customizer/organ/snout/half_drake
+	customizer_choices = list(/datum/customizer_choice/organ/snout/half_drake)
+	allows_disabling = TRUE
+	default_disabled = TRUE
+
+/datum/customizer_choice/organ/snout/half_drake
+	name = "Half-Drake Snout"
+	organ_type = /obj/item/organ/snout/lizard
+	sprite_accessories = list(
+		/datum/sprite_accessory/snout/sharp,
+		/datum/sprite_accessory/snout/round,
+		/datum/sprite_accessory/snout/sharplight,
+		/datum/sprite_accessory/snout/roundlight,
+		/datum/sprite_accessory/snout/vulp,
+		/datum/sprite_accessory/snout/front/sharp,
+		/datum/sprite_accessory/snout/front/round,
+		/datum/sprite_accessory/snout/front/sharplight,
+		/datum/sprite_accessory/snout/front/roundlight,
+		/datum/sprite_accessory/snout/shortnosed,
+		/datum/sprite_accessory/snout/stubby,
+		/datum/sprite_accessory/snout/stubbyalt,
+	)

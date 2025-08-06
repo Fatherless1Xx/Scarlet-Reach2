@@ -96,6 +96,7 @@ GLOBAL_LIST_INIT(our_forest_sex, typecacheof(list(
 #define isvermin(A) (is_species(A, /datum/species/anthromorphsmall))
 #define isaxian(A) (is_species(A, /datum/species/akula))
 #define isdracon(A) (is_species(A, /datum/species/dracon))
+#define ishalf_drake(A) (is_species(A, /datum/species/half_drake))
 #define islupian(A) (is_species(A, /datum/species/lupian))
 #define ismoth(A) (is_species(A, /datum/species/moth))
 #define istabaxi(A) (is_species(A, /datum/species/tabaxi))
