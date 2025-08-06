@@ -150,6 +150,7 @@
     /datum/species/tabaxi,\
     /datum/species/lizardfolk,\
     /datum/species/dracon,\
+    /datum/species/half_drake,\
     /datum/species/akula,\
 
 #define RACES_FEARED \
