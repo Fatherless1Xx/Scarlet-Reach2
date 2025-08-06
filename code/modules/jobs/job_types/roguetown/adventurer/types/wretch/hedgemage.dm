@@ -52,7 +52,7 @@
 	var/classchoice = input("Choose your archetypes", "Available archetypes") as anything in classes
 	switch(classchoice)
 		if("Hedge Mage")
-			H?.mind.adjust_spellpoints(28)
+			H?.mind.adjust_spellpoints(27)
 			ADD_TRAIT(H, TRAIT_ARCYNE_T4, TRAIT_GENERIC)
 		if("Rogue Mage")
 			H?.mind.adjust_spellpoints(21)
