@@ -380,9 +380,9 @@ GLOBAL_LIST_EMPTY(heretical_players)
                     to_chat(src, span_warning("[H.real_name] is already afflicted by another curse."))
                     return
 
-                // Check if target is inhuman or psydonite worshipper - silently fail for heretics
-                if (istype(H.patron, /datum/patron/inhumen) || HAS_TRAIT(H, TRAIT_PSYDONITE))
-                    // Curse appears to work but has no effect on heretics
+                // Check if target is a bandit or wretch - silently fail for outlaws
+                if (H.mind?.assigned_role == "Bandit" || H.mind?.assigned_role == "Wretch")
+                    // Curse appears to work but has no effect on outlaws
                     priority_announce("[real_name] has cursed [H.real_name] with [curse_pick]!", title = "Judgment of the Gods", sound = 'sound/misc/excomm.ogg')
                     last_curse_time = world.time // set cooldown
                     return
