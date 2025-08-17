@@ -5,11 +5,15 @@
 	allowed_races = RACES_ALL_KINDS
 	outfit = /datum/outfit/job/roguetown/wretch/heretic
 	category_tags = list(CTAG_WRETCH)
-	traits_applied = list(TRAIT_STEELHEARTED, TRAIT_OUTLANDER, TRAIT_HEAVYARMOR, TRAIT_RITUALIST, TRAIT_OUTLAW, TRAIT_HERESIARCH)
+	traits_applied = list(TRAIT_STEELHEARTED, TRAIT_OUTLANDER, TRAIT_HEAVYARMOR, TRAIT_RITUALIST, TRAIT_OUTLAW)
 
 
 /datum/outfit/job/roguetown/wretch/heretic/pre_equip(mob/living/carbon/human/H)
-	if (!(istype(H.patron, /datum/patron/inhumen/zizo) || istype(H.patron, /datum/patron/inhumen/matthios) || istype(H.patron, /datum/patron/inhumen/graggar) || istype(H.patron, /datum/patron/inhumen/baotha)))
+	if (!(istype(H.patron, /datum/patron/inhumen/zizo) \
+	   || istype(H.patron, /datum/patron/inhumen/matthios) \
+	   || istype(H.patron, /datum/patron/inhumen/graggar) \
+	   || istype(H.patron, /datum/patron/inhumen/baotha) \
+	   || istype(H.patron, /datum/patron/old_god)))
 		to_chat(H, span_warning("My former deity frowned upon my practices. I have since turned to a new god."))
 		H.set_patron(pick(/datum/patron/inhumen/zizo, /datum/patron/inhumen/matthios, /datum/patron/inhumen/graggar, /datum/patron/inhumen/baotha))
 	H.mind.current.faction += "[H.name]_faction"
@@ -71,9 +75,21 @@
 	switch(H.patron?.type)
 		if(/datum/patron/inhumen/zizo)
 			H.cmode_music = 'sound/music/combat_heretic.ogg'
+			ADD_TRAIT(H, TRAIT_HERESIARCH, TRAIT_GENERIC)
 		if(/datum/patron/inhumen/matthios)
 			H.cmode_music = 'sound/music/combat_matthios.ogg'
+			ADD_TRAIT(H, TRAIT_HERESIARCH, TRAIT_GENERIC)
 		if(/datum/patron/inhumen/baotha)
 			H.cmode_music = 'sound/music/combat_baotha.ogg'
+			ADD_TRAIT(H, TRAIT_HERESIARCH, TRAIT_GENERIC)
 		if(/datum/patron/inhumen/graggar)
 			H.cmode_music = 'sound/music/combat_graggar.ogg'
+			ADD_TRAIT(H, TRAIT_HERESIARCH, TRAIT_GENERIC)
+		if(/datum/patron/old_god)
+			if(H.mind)
+				H.mind.RemoveSpell(/obj/effect/proc_holder/spell/invoked/lesser_heal)
+				H.mind.AddSpell(new /obj/effect/proc_holder/spell/invoked/diagnose/secular)
+				H.mind.AddSpell(new /obj/effect/proc_holder/spell/invoked/guidance)
+				H.mind.AddSpell(new /obj/effect/proc_holder/spell/invoked/regression)
+				H.mind.AddSpell(new /obj/effect/proc_holder/spell/invoked/convergence)
+				H.mind.AddSpell(new /obj/effect/proc_holder/spell/invoked/stasis)
