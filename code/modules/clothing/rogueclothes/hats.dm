@@ -2105,3 +2105,15 @@
 	sewrepair = TRUE
 	flags_inv = HIDEEARS
 	body_parts_covered = HEAD|HAIR|EARS|NOSE|EYES
+
+/obj/item/clothing/head/roguetown/hbit
+	name = "head bit"
+	desc = "A restraining head piece made of reinforced leather."
+	icon_state = "hbit"
+	item_state = "hbit"
+	body_parts_covered = HEAD|FACE
+	slot_flags = ITEM_SLOT_HEAD|ITEM_SLOT_MASK
+	max_integrity = 400
+	armor = list("blunt" = 70, "slash" = 80, "stab" = 65, "piercing" = 40, "fire" = 0, "acid" = 0)
+	prevent_crits = list(BCLASS_CUT, BCLASS_BLUNT, BCLASS_TWIST)
+	sewrepair = TRUE

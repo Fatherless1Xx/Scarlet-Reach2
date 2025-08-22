@@ -455,3 +455,14 @@
 	item_state = "eastsandals"
 	sleeved = 'icons/roguetown/clothing/onmob/helpers/stonekeep_merc.dmi'
 	armor = ARMOR_BOOTS
+
+/obj/item/clothing/shoes/roguetown/armor/hlegs
+	name = "leg harness"
+	desc = "A set of reinforced leather straps and bindings for the legs."
+	icon_state = "hlegs"
+	item_state = "hlegs"
+	body_parts_covered = LEGS
+	max_integrity = 400
+	armor = list("blunt" = 50, "slash" = 90, "stab" = 60, "piercing" = 30, "fire" = 0, "acid" = 0)
+	armor_class = ARMOR_CLASS_LIGHT
+	sewrepair = TRUE

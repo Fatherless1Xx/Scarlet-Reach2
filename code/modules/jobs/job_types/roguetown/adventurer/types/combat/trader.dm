@@ -11,12 +11,13 @@
 					"Jeweler" = "You make your coin peddling exotic jewelry, gems, and shiny things.",
 					"Doomsayer" = "THE WORLD IS ENDING!!! At least, that's what you want your clients to believe. You'll offer them a safe place in the new world, of course - built by yours truly.",
 					"Scholar" = "You are a scholar traveling the world in order to write a book about your ventures. You trade in stories and tales of your travels.",
-					"Harlequin" = "You are a travelling entertainer - a jester by trade. Where you go, chaos follows - and mischief is made.")
+					"Harlequin" = "You are a travelling entertainer - a jester by trade. Where you go, chaos follows - and mischief is made.",
+					"PonyGirl" = "Trained to serve as a mount and beast of burden, you are equipped with special gear and training.")
 
 /datum/outfit/job/roguetown/adventurer/trader/pre_equip(mob/living/carbon/human/H)
 	..()
 	H.adjust_blindness(-3)
-	var/classes = list("Peddler","Brewer","Jeweler","Doomsayer","Scholar","Harlequin")
+	var/classes = list("Peddler","Brewer","Jeweler","Doomsayer","Scholar","Harlequin", "PonyGirl")
 	var/classchoice = input("Choose your archetypes", "Available archetypes") as anything in classes
 
 	switch(classchoice)
@@ -221,6 +222,30 @@
 					backr = /obj/item/rogue/instrument/vocals
 				if("Trumpet")
 					backr = /obj/item/rogue/instrument/trumpet
+
+		if("PonyGirl")
+			to_chat(H, span_warning("Trained to serve as a mount and beast of burden, you are equipped with special gear and training."))
+			mask = /obj/item/clothing/mask/rogue/hblinders
+			head = /obj/item/clothing/head/roguetown/hbit
+			armor = /obj/item/clothing/suit/roguetown/armor/hcorset
+			gloves = /obj/item/clothing/gloves/roguetown/harms
+			shoes = /obj/item/clothing/shoes/roguetown/armor/hlegs
+			H.change_stat("constitution", 10)
+			H.change_stat("speed", 10)
+			H.adjust_skillrank(/datum/skill/combat/knives, 6, TRUE)
+			H.adjust_skillrank(/datum/skill/combat/wrestling, 6, TRUE)
+			H.adjust_skillrank(/datum/skill/combat/unarmed, 6, TRUE)
+			ADD_TRAIT(H, TRAIT_PONYGIRL_RIDEABLE, TRAIT_GENERIC)
+			ADD_TRAIT(H, TRAIT_CRITICAL_RESISTANCE, TRAIT_GENERIC)
+			ADD_TRAIT(H, TRAIT_EMPATH, TRAIT_GENERIC)
+			ADD_TRAIT(H, TRAIT_NOPAIN, TRAIT_GENERIC)
+			ADD_TRAIT(H, TRAIT_NOPAINSTUN, TRAIT_GENERIC)
+			ADD_TRAIT(H, TRAIT_STABLELIVER, TRAIT_GENERIC)
+			ADD_TRAIT(H, TRAIT_PACIFISM, TRAIT_GENERIC)
+			ADD_TRAIT(H, TRAIT_NASTY_EATER, TRAIT_GENERIC)
+			ADD_TRAIT(H, TRAIT_GOODLOVER, TRAIT_GENERIC)
+			ADD_TRAIT(H, TRAIT_BLOODLOSS_IMMUNE, TRAIT_GENERIC)
+
 
 /obj/item/clothing/mask/rogue/ragmask/black
 	color = CLOTHING_BLACK

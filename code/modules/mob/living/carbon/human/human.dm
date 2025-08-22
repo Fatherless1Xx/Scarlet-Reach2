@@ -840,6 +840,22 @@
 		remove_movespeed_modifier(MOVESPEED_ID_DAMAGE_SLOWDOWN)
 		remove_movespeed_modifier(MOVESPEED_ID_DAMAGE_SLOWDOWN_FLYING)
 
+/mob/living/carbon/human/MiddleClick(mob/user, params)
+	..()
+	// Ponygirl mounting
+	if(HAS_TRAIT(src, TRAIT_PONYGIRL_RIDEABLE))
+		if(user == target && can_buckle && !buckled_mobs?.len)
+			if(user.incapacitated() || user.stat || user.restrained())
+				return
+			user.visible_message(span_notice("[user] starts mounting [src]..."))
+			if(do_after(user, 15, target = src))
+				if(user.incapacitated())
+					return
+				if(buckle_mob(user, TRUE, FALSE))
+					return TRUE
+		return
+	return ..()
+
 /mob/living/carbon/human/adjust_nutrition(change) //Honestly FUCK the oldcoders for putting nutrition on /mob someone else can move it up because holy hell I'd have to fix SO many typechecks
 	if(HAS_TRAIT(src, TRAIT_NOHUNGER))
 		return FALSE

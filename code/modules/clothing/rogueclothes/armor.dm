@@ -1478,4 +1478,17 @@
 	max_integrity = 300
 	sellprice = 25
 
+
+/obj/item/clothing/suit/roguetown/armor/hcorset
+	name = "harness corset"
+	desc = "A tight-fitting leather bodice reinforced for protection."
+	icon_state = "hcorset"
+	item_state = "hcorset"
+	slot_flags = ITEM_SLOT_ARMOR|ITEM_SLOT_SHIRT
+	max_integrity = 400
+	armor = list("blunt" = 80, "slash" = 90, "stab" = 80, "piercing" = 80, "fire" = 0, "acid" = 0)
+	armor_class = ARMOR_CLASS_LIGHT
+	boobed = TRUE
+	flags_inv = 0
+
 // this robe spawns on a role that offers no leg protection nor further upgrades to the loadout, in exchange for better roundstart gear

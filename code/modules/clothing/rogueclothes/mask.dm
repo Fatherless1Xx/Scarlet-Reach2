@@ -378,3 +378,14 @@
 	detail_tag = "_detail"
 	detail_color = COLOR_SILVER
 	sewrepair = TRUE
+
+/obj/item/clothing/mask/rogue/hblinders
+	name = "head blinders"
+	desc = "Keeps the wearer focused ahead. Made of reinforced leather."
+	icon_state = "hblinders"
+	item_state = "hblinders"
+	body_parts_covered = HEAD
+	max_integrity = 400
+	armor = list("blunt" = 80, "slash" = 90, "stab" = 80, "piercing" = 80, "fire" = 0, "acid" = 0)
+	armor_class = ARMOR_CLASS_LIGHT
+	sewrepair = TRUE

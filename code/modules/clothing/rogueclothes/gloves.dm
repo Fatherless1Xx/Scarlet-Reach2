@@ -345,3 +345,16 @@
 	drop_sound = 'sound/foley/dropsound/cloth_drop.ogg'
 	anvilrepair = null
 	sewrepair = TRUE
+
+
+/obj/item/clothing/gloves/roguetown/harms
+	name = "arm harness"
+	desc = "Reinforced leather bindings for the arms."
+	icon_state = "harms"
+	item_state = "harms"
+	body_parts_covered = HANDS
+	max_integrity = 400
+	armor = list("blunt" = 60, "slash" = 90, "stab" = 60, "piercing" = 60, "fire" = 0, "acid" = 0)
+	armor_class = ARMOR_CLASS_LIGHT
+	sewrepair = TRUE
+	sleeved = FALSE

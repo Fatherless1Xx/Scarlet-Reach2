@@ -112,3 +112,142 @@
 	if(dna.species.space_move(src))
 		return TRUE
 	return ..()
+
+// ===== MOUNTING PONIES =====
+
+/mob/living/carbon/human/proc/handle_pony_riding()
+	if(!HAS_TRAIT(src, TRAIT_PONYGIRL_RIDEABLE))
+		return FALSE
+
+	for(var/mob/living/carbon/human/rider in src.buckled_mobs)
+		if(!rider) 
+			continue
+
+		// Transfer brute damage
+		if(rider.getBruteLoss() > 0)
+			var/damage = rider.getBruteLoss()
+			apply_damage(damage, BRUTE, null, 0)
+			rider.heal_overall_damage(damage, 0)
+
+		// Transfer fire damage
+		if(rider.getFireLoss() > 0)
+			var/damage = rider.getFireLoss()
+			apply_damage(damage, BURN, null, 0)
+			rider.heal_overall_damage(0, damage)
+
+		// Transfer bleeding
+		if(rider.bleed_rate > 0)
+			var/old_bleed = rider.bleed_rate
+			rider.bleed_rate = 0
+			bleed_rate += old_bleed
+
+	return TRUE
+
+/mob/living/carbon/human/buckle_mob(mob/living/M, force = FALSE, check_loc = TRUE)
+	if(!force && !HAS_TRAIT(src, TRAIT_PONYGIRL_RIDEABLE))
+		return FALSE
+
+	if(..()) // call parent buckle
+		var/datum/component/riding/human/riding_datum = LoadComponent(/datum/component/riding/human)
+		riding_datum.vehicle_move_delay = 2
+		if(M.mind)
+			var/riding_skill = M.get_skill_level(/datum/skill/misc/riding)
+			if(riding_skill)
+				riding_datum.vehicle_move_delay = max(1, 2 - (riding_skill * 0.2))
+
+		riding_datum.set_riding_offsets(RIDING_OFFSET_ALL, list(
+			TEXT_NORTH = list(0, 6),
+			TEXT_SOUTH = list(0, 6),
+			TEXT_EAST = list(-6, 4),
+			TEXT_WEST = list(6, 4)
+		))
+		riding_datum.set_vehicle_dir_layer(SOUTH, ABOVE_MOB_LAYER)
+		riding_datum.set_vehicle_dir_layer(NORTH, OBJ_LAYER)
+		riding_datum.set_vehicle_dir_layer(EAST, OBJ_LAYER)
+		riding_datum.set_vehicle_dir_layer(WEST, OBJ_LAYER)
+		return TRUE
+	return FALSE
+
+/mob/living/carbon/human/unbuckle_mob(mob/living/M, force = FALSE)
+	var/datum/component/riding/human/riding_datum = GetComponent(/datum/component/riding/human)
+	if(riding_datum)
+		riding_datum.force_dismount(M)
+
+/mob/living/carbon/human/MouseDrop(atom/over_object)
+	if(HAS_TRAIT(src, TRAIT_PONYGIRL_RIDEABLE) && over_object == usr)
+		var/mob/living/user = usr
+
+		// Only allow mounting with weak intent
+		if(!istype(user.rmb_intent, /datum/rmb_intent/weak))
+			return ..() // fail gracefully
+
+		if(can_buckle && !buckled_mobs?.len)
+			if(user.incapacitated() || user.lying || user.restrained())
+				return
+
+			user.visible_message(span_notice("[user] starts mounting [src]..."))
+			if(do_after(user, 15, target = src))
+				if(user.incapacitated() || user.lying || user.restrained())
+					return
+				if(!istype(user.rmb_intent, /datum/rmb_intent/weak))
+					return ..()
+
+				if(buckle_mob(user, TRUE, FALSE))
+					var/datum/component/riding/human/riding_datum = LoadComponent(/datum/component/riding/human)
+					riding_datum.vehicle_move_delay = 2
+					if(user.mind)
+						var/riding_skill = user.get_skill_level(/datum/skill/misc/riding)
+						if(riding_skill)
+							riding_datum.vehicle_move_delay = max(1, 2 - (riding_skill * 0.2))
+					return TRUE
+		return
+	return ..()
+
+/mob/living/carbon/human/relaymove(mob/user, direction)
+	if(HAS_TRAIT(src, TRAIT_PONYGIRL_RIDEABLE))
+		var/datum/component/riding/riding_datum = GetComponent(/datum/component/riding)
+		if(riding_datum)
+			return riding_datum.handle_ride(user, direction)
+	return ..()
+
+/mob/living/carbon/human/Life()
+	. = ..() // parent life
+	if(HAS_TRAIT(src, TRAIT_PONYGIRL_RIDEABLE))
+		handle_pony_riding()
+
+/mob/living/carbon/human/Knockdown(amount, updating = TRUE)
+	. = ..() // parent Knockdown
+	if(HAS_TRAIT(src, TRAIT_PONYGIRL_RIDEABLE) && buckled_mobs)
+		for(var/mob/living/carbon/human/rider in buckled_mobs)
+			unbuckle_mob(rider, TRUE)
+			to_chat(rider, span_warning("You fall off [src] as they collapse!"))
+			to_chat(src, span_warning("[rider] tumbles off you as you fall!"))
+
+/mob/living/carbon/human/attackby(obj/item/I, mob/living/user, params)
+	if(buckled && istype(buckled, /mob/living/carbon/human))
+		var/mob/living/carbon/human/mount = buckled
+		if(HAS_TRAIT(mount, TRAIT_PONYGIRL_RIDEABLE))
+			visible_message(span_warning("[user]'s attack is redirected to [mount]'s chest!"))
+			user.zone_selected = BODY_ZONE_CHEST
+			return mount.attackby(I, user, params)
+	return ..()
+
+/mob/living/carbon/human/attack_animal(mob/living/simple_animal/M)
+	if(buckled && istype(buckled, /mob/living/carbon/human))
+		var/mob/living/carbon/human/mount = buckled
+		if(HAS_TRAIT(mount, TRAIT_PONYGIRL_RIDEABLE))
+			visible_message(span_warning("[M]'s attack is redirected to [mount]!"))
+			mount.attack_animal(M)
+			mount.handle_pony_riding()
+			return TRUE
+	return ..()
+
+/mob/living/carbon/human/bullet_act(obj/projectile/P)
+	if(buckled && istype(buckled, /mob/living/carbon/human))
+		var/mob/living/carbon/human/mount = buckled
+		if(HAS_TRAIT(mount, TRAIT_PONYGIRL_RIDEABLE))
+			visible_message(span_warning("The [P] is redirected to [mount]!"))
+			mount.bullet_act(P)
+			mount.handle_pony_riding()
+			return BULLET_ACT_HIT
+	return ..()
